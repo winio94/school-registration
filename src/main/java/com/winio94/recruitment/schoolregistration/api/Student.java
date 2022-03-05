@@ -12,6 +12,10 @@ public class Student {
         this.lastName = lastName;
     }
 
+    public static Student from(CreateNewStudent newStudent, String uuid) {
+        return new Student(uuid, newStudent.getFirstName(), newStudent.getLastName());
+    }
+
     public String getUuid() {
         return uuid;
     }

@@ -1,15 +1,20 @@
 package com.winio94.recruitment.schoolregistration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.winio94.recruitment.schoolregistration.api.CreateNewStudent;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -30,7 +35,8 @@ public class StudentsControllerTest {
         String expectedResponse = readFileAsString("response/getAllStudents.json");
 
         mvc.perform(get("/students").contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk()).andExpect(content().json(expectedResponse));
+           .andExpect(status().isOk())
+           .andExpect(content().json(expectedResponse));
     }
 
     @ParameterizedTest
@@ -40,13 +46,26 @@ public class StudentsControllerTest {
         String expectedResponse = readFileAsString(expectedResponseFile);
 
         mvc.perform(get("/students/{uuid}", uuid).contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk()).andExpect(content().json(expectedResponse));
+           .andExpect(status().isOk())
+           .andExpect(content().json(expectedResponse));
     }
 
     @Test
     public void shouldReturnReturnNotFoundResponseIfStudentNotFound() throws Exception {
         mvc.perform(get("/students/{uuid}", "suchStudentDoesNotExist").contentType(
             MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void shouldCreateNewStudent() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(
+            new CreateNewStudent("Monica", "Bellucci"));
+
+        mvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+           .andExpect(status().isCreated())
+           .andExpect(content().json(requestBody, false))
+           .andExpect(jsonPath("$.uuid", Matchers.not(Matchers.empty())));
     }
 
     public static Stream<Arguments> studentsByUuid() {

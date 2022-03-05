@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class DummyStudentsRepository implements StudentsRepository {
 
@@ -29,8 +30,11 @@ public class DummyStudentsRepository implements StudentsRepository {
     }
 
     @Override
-    public Student create(Student newStudent) {
-        return null;
+    public Student create(CreateNewStudent newStudent) {
+        String uuid = UUID.randomUUID().toString();
+        Student createdStudent = Student.from(newStudent, uuid);
+        dummyStudents.put(uuid, createdStudent);
+        return createdStudent;
     }
 
     @Override

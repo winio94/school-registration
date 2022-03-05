@@ -9,7 +9,7 @@ public interface StudentsRepository {
 
     Optional<Student> getOne(String uuid);
 
-    Student create(Student newStudent);
+    Student create(CreateNewStudent newStudent);
 
     void delete(Student newStudent);
 }
