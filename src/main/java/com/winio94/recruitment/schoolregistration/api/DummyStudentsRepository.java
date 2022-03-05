@@ -12,11 +12,7 @@ public class DummyStudentsRepository implements StudentsRepository {
     private final Map<String, Student> dummyStudents;
 
     public DummyStudentsRepository() {
-        dummyStudents = new HashMap<>(2);
-        Student john = new Student("59ee2a28-24fd-49fb-9bd7-eb34f77c6dc1", "John", "Doe");
-        Student karen = new Student("0992e41b-78e9-4cb2-83de-5816e7c59283", "Karen", "Simson");
-        dummyStudents.put("59ee2a28-24fd-49fb-9bd7-eb34f77c6dc1", john);
-        dummyStudents.put("0992e41b-78e9-4cb2-83de-5816e7c59283", karen);
+        dummyStudents = new HashMap<>();
     }
 
     @Override
@@ -38,7 +34,7 @@ public class DummyStudentsRepository implements StudentsRepository {
     }
 
     @Override
-    public void delete(Student newStudent) {
-
+    public void delete(String uuid) {
+        dummyStudents.remove(uuid);
     }
 }

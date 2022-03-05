@@ -11,5 +11,5 @@ public interface StudentsRepository {
 
     Student create(CreateNewStudent newStudent);
 
-    void delete(Student newStudent);
+    void delete(String uuid);
 }
