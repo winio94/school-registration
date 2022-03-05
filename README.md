@@ -1,6 +1,7 @@
 <h2>School registration system</h2>
 
 Design and implement simple school registration system
+
 - Assuming you already have a list of students
 - Assuming you already have a list of courses
 - (REQ1) A student can register to multiple courses
@@ -9,12 +10,15 @@ Design and implement simple school registration system
 - (REQ4) A student can register to 5 course maximum
 
 Provide the following REST API:
+
 - (TASK1) Create students CRUD
 - (TASK2) Create courses CRUD
 - (TASK3) Create API for students to register to courses
 - (TASK4) Create abilities for user to view all relationships between students and courses
+
 + (TASK5) Filter all students with a specific course
 + (TASK6) Filter all courses for a specific student
 + (TASK7) Filter all courses without any students
 + (TASK8) Filter all students without any courses
+
 -----------------------------------------------------------------------
