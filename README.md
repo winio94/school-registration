@@ -22,3 +22,23 @@ Provide the following REST API:
 + (TASK8) Filter all students without any courses
 
 -----------------------------------------------------------------------
+
+<h3>Building project</h3>
+
+* To build and install locally, skipping all tests: `mvn clean install -DskipTests=true`
+* To run unit tests only: `mvn clean verify`
+
+-----------------------------------------------------------------------
+
+<h3>Postman setup</h3>
+TODO
+
+-----------------------------------------------------------------------
+
+<h3>Code formatting</h3>
+TODO
+
+-----------------------------------------------------------------------
+
+<h3>REST API documentation</h3>
+TODO

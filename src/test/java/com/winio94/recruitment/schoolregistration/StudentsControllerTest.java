@@ -9,7 +9,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -23,11 +27,32 @@ public class StudentsControllerTest {
 
     @Test
     public void shouldReturnAllStudents() throws Exception {
-        String expectedStudentsResponse = readFileAsString("response/getAllStudents.json");
+        String expectedResponse = readFileAsString("response/getAllStudents.json");
 
         mvc.perform(get("/students").contentType(MediaType.APPLICATION_JSON))
-           .andExpect(status().isOk())
-           .andExpect(content().json(expectedStudentsResponse));
+           .andExpect(status().isOk()).andExpect(content().json(expectedResponse));
+    }
+
+    @ParameterizedTest
+    @MethodSource("studentsByUuid")
+    public void shouldReturnStudentByUuid(String uuid, String expectedResponseFile)
+        throws Exception {
+        String expectedResponse = readFileAsString(expectedResponseFile);
+
+        mvc.perform(get("/students/{uuid}", uuid).contentType(MediaType.APPLICATION_JSON))
+           .andExpect(status().isOk()).andExpect(content().json(expectedResponse));
+    }
+
+    @Test
+    public void shouldReturnReturnNotFoundResponseIfStudentNotFound() throws Exception {
+        mvc.perform(get("/students/{uuid}", "suchStudentDoesNotExist").contentType(
+            MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+    }
+
+    public static Stream<Arguments> studentsByUuid() {
+        return Stream.of(
+            Arguments.of("59ee2a28-24fd-49fb-9bd7-eb34f77c6dc1", "response/studentJohn.json"),
+            Arguments.of("0992e41b-78e9-4cb2-83de-5816e7c59283", "response/studentKaren.json"));
     }
 
     Path getResourceFilePath(String relativeResourcePath) {
@@ -42,7 +67,7 @@ public class StudentsControllerTest {
     String readFileAsString(String filePath) {
         try {
             return new String(Files.readAllBytes(getResourceFilePath(filePath)),
-                StandardCharsets.UTF_8);
+                              StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(String.format("Could not find file %s.", filePath));
         }

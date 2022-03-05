@@ -7,7 +7,7 @@ public interface StudentsRepository {
 
     List<Student> getAll();
 
-    Optional<Student> getOne();
+    Optional<Student> getOne(String uuid);
 
     Student create(Student newStudent);
 
