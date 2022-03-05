@@ -42,3 +42,8 @@ TODO
 
 <h3>REST API documentation</h3>
 TODO
+
+-----------------------------------------------------------------------
+
+Build status TODO
+https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge
