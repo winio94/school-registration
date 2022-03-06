@@ -13,11 +13,14 @@ public class StudentsAndCoursesServiceImpl implements StudentsAndCoursesService 
     private static final Logger log = LoggerFactory.getLogger(StudentsAndCoursesServiceImpl.class);
     private final StudentsAndCoursesRepository studentsAndCoursesRepository;
     private final StudentsService studentsService;
+    private final CoursesService coursesService;
 
     public StudentsAndCoursesServiceImpl(StudentsAndCoursesRepository studentsAndCoursesRepository,
-                                         StudentsService studentsService) {
+                                         StudentsService studentsService,
+                                         CoursesService coursesService) {
         this.studentsAndCoursesRepository = studentsAndCoursesRepository;
         this.studentsService = studentsService;
+        this.coursesService = coursesService;
     }
 
     @Override
@@ -33,7 +36,12 @@ public class StudentsAndCoursesServiceImpl implements StudentsAndCoursesService 
 
     @Override
     public Set<Course> getAllCoursesForStudent(String studentUuid) {
-        log.info("Fetching courses that are assigned to the student with uuid = {}", studentUuid);
-        return studentsAndCoursesRepository.getAllCoursesForStudent(studentUuid);
+        if (Objects.nonNull(studentUuid)) {
+            log.info("Fetching courses that are assigned to the student with uuid = {}",
+                     studentUuid);
+            return studentsAndCoursesRepository.getAllCoursesForStudent(studentUuid);
+        } else {
+            return coursesService.getAll();
+        }
     }
 }

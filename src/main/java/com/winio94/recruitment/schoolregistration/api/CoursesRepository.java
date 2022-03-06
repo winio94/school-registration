@@ -1,11 +1,11 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface CoursesRepository {
 
-    List<Course> getAll();
+    Set<Course> getAll();
 
     Optional<Course> getOne(String uuid);
 

@@ -100,6 +100,11 @@ public class CoursesControllerTest extends AbstractControllerTest {
            .andExpect(status().isOk())
            .andExpect(content().json(
                toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
+
+        mvc.perform(get("/courses").param("student", studentUuid))
+           .andExpect(status().isOk())
+           .andExpect(content().json(
+               toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
     }
 
     public static Stream<Arguments> byUuidMethods() {
