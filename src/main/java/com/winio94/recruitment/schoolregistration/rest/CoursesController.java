@@ -35,8 +35,9 @@ public class CoursesController {
     }
 
     @GetMapping
-    public Set<Course> getAll(@RequestParam(name = "student", required = false) String studentUuid) {
-        return studentsAndCoursesService.getAllCoursesForStudent(studentUuid);
+    public Set<Course> getAll(@RequestParam(name = "student", required = false) String studentUuid,
+                              @RequestParam(required = false) boolean withoutAnyStudent) {
+        return studentsAndCoursesService.getAllCoursesFiltered(studentUuid, withoutAnyStudent);
     }
 
     @GetMapping("/{uuid}")
@@ -59,7 +60,7 @@ public class CoursesController {
 
     @GetMapping("/{uuid}/students")
     public Set<Student> students(@PathVariable String uuid) {
-        return studentsAndCoursesService.getAllStudentsForCourse(uuid);
+        return studentsAndCoursesService.getAllStudentsFiltered(uuid, false);
     }
 
     @DeleteMapping("/{uuid}")

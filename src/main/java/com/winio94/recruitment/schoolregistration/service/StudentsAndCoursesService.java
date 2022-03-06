@@ -6,7 +6,7 @@ import java.util.Set;
 
 public interface StudentsAndCoursesService {
 
-    Set<Student> getAllStudentsForCourse(String courseUuid);
+    Set<Student> getAllStudentsFiltered(String courseUuid, boolean notRegisteredToAnyCourse);
 
-    Set<Course> getAllCoursesForStudent(String studentUuid);
+    Set<Course> getAllCoursesFiltered(String studentUuid, boolean withoutAnyStudent);
 }

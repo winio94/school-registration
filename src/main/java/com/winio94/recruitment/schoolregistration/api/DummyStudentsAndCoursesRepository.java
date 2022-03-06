@@ -49,6 +49,27 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
 
     }
 
+    @Override
+    public Set<Course> getAllCoursesWithoutAnyStudent() {
+        return coursesRepository.getAll()
+                                .stream()
+                                .filter(c -> !studentsPerCourse.containsKey(c.getUuid()))
+                                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<Student> getAllStudentsNotRegisteredToAnyCourse() {
+        Set<String> distinctStudentsUuids = studentsPerCourse.values()
+                                                             .stream()
+                                                             .flatMap(Set::stream)
+                                                             .map(Student::getUuid)
+                                                             .collect(Collectors.toSet());
+        return studentsRepository.getAll()
+                                 .stream()
+                                 .filter(c -> !distinctStudentsUuids.contains(c.getUuid()))
+                                 .collect(Collectors.toSet());
+    }
+
     private Predicate<Entry<String, Set<Student>>> isStudentAssignedToTheCourse(
         String studentUuid) {
         return (entry) -> {

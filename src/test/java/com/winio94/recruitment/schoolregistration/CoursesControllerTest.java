@@ -75,8 +75,8 @@ public class CoursesControllerTest extends AbstractControllerTest {
     public void shouldRegisterStudentToCourse() throws Exception {
         createNewCourse(new NewCourse("Maths", "004"));
         createNewStudent(new NewStudent("John", "Doe"));
-        NewCourse newCourse = new NewCourse("PT", "003");
         NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewCourse newCourse = new NewCourse("PT", "003");
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
         String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
@@ -95,16 +95,33 @@ public class CoursesControllerTest extends AbstractControllerTest {
            .andExpect(status().isOk())
            .andExpect(content().json(
                toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
+    }
 
-        mvc.perform(get("/students").param("course", courseUuid))
-           .andExpect(status().isOk())
-           .andExpect(content().json(
-               toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
+    @Test
+    public void shouldFilterCourses() throws Exception {
+        NewCourse courseWithoutAnyStudent = new NewCourse("Maths", "004");
+        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewCourse newCourse = new NewCourse("PT", "003");
+        String courseWithoutAnyStudentUuid = getUuidFromResponse(
+            createNewCourse(courseWithoutAnyStudent));
+        String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
+        String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
+        String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
+
+        mvc.perform(
+               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                           .content(registrationRequestBody))
+           .andExpect(status().isOk());
 
         mvc.perform(get("/courses").param("student", studentUuid))
            .andExpect(status().isOk())
            .andExpect(content().json(
                toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
+
+        mvc.perform(get("/courses").param("withoutAnyStudent", "true"))
+           .andExpect(status().isOk())
+           .andExpect(content().json(toJsonString(Collections.singletonList(
+               Course.from(courseWithoutAnyStudent, courseWithoutAnyStudentUuid)))));
     }
 
     public static Stream<Arguments> byUuidMethods() {
