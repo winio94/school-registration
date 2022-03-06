@@ -11,6 +11,7 @@ public class RegisterStudentToCourse implements WithUuid {
     }
 
     @Override
+    @JsonProperty("studentUuid")
     public String getUuid() {
         return studentUuid;
     }

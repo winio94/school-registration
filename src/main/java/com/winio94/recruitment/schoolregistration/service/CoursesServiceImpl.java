@@ -2,14 +2,11 @@ package com.winio94.recruitment.schoolregistration.service;
 
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
+import com.winio94.recruitment.schoolregistration.api.Entity;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
 import java.util.List;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 public class CoursesServiceImpl implements CoursesService {
 
@@ -29,7 +26,8 @@ public class CoursesServiceImpl implements CoursesService {
     @Override
     public Course getOne(String uuid) {
         log.info("Fetching course by uuid = {}", uuid);
-        return coursesRepository.getOne(uuid).orElseThrow(notFoundError(uuid));
+        return coursesRepository.getOne(uuid)
+                                .orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
     }
 
     @Override
@@ -42,18 +40,7 @@ public class CoursesServiceImpl implements CoursesService {
     @Override
     public void delete(String uuid) {
         log.info("Deleting course with uuid = {}", uuid);
-        coursesRepository.getOne(uuid).orElseThrow(notFoundError(uuid));
+        coursesRepository.getOne(uuid).orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
         coursesRepository.delete(uuid);
-    }
-
-    @Override
-    public void register(String uuid, RegisterStudentToCourse registerStudentToCourse) {
-        log.info("Registering student with uuid = {} for a course with uuid = {}", registerStudentToCourse.getUuid(), uuid);
-
-    }
-
-    private Supplier<ResponseStatusException> notFoundError(String uuid) {
-        return () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format(
-            "Course with uuid = %s does not exists", uuid));
     }
 }
