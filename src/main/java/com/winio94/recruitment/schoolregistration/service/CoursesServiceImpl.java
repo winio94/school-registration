@@ -2,7 +2,8 @@ package com.winio94.recruitment.schoolregistration.service;
 
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
-import com.winio94.recruitment.schoolregistration.api.CreateNewCourse;
+import com.winio94.recruitment.schoolregistration.api.NewCourse;
+import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
 import java.util.List;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -32,10 +33,10 @@ public class CoursesServiceImpl implements CoursesService {
     }
 
     @Override
-    public Course create(CreateNewCourse createNewCourse) {
-        log.info("Creating new course with name = {} and code = {}", createNewCourse.getName(),
-                 createNewCourse.getCode());
-        return coursesRepository.create(createNewCourse);
+    public Course create(NewCourse newCourse) {
+        log.info("Creating new course with name = {} and code = {}", newCourse.getName(),
+                 newCourse.getCode());
+        return coursesRepository.create(newCourse);
     }
 
     @Override
@@ -43,6 +44,11 @@ public class CoursesServiceImpl implements CoursesService {
         log.info("Deleting course with uuid = {}", uuid);
         coursesRepository.getOne(uuid).orElseThrow(notFoundError(uuid));
         coursesRepository.delete(uuid);
+    }
+
+    @Override
+    public void register(String uuid, RegisterStudentToCourse registerStudentToCourse) {
+
     }
 
     private Supplier<ResponseStatusException> notFoundError(String uuid) {

@@ -4,46 +4,30 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.Course;
-import com.winio94.recruitment.schoolregistration.api.CreateNewCourse;
-import com.winio94.recruitment.schoolregistration.service.CoursesService;
+import com.winio94.recruitment.schoolregistration.api.NewCourse;
+import com.winio94.recruitment.schoolregistration.api.NewStudent;
+import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
 import java.util.stream.Stream;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.JSONAssert;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 
-@WebMvcTest
-public class CoursesControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private CoursesService coursesService;
-
-    @BeforeEach
-    void beforeEach() {
-        coursesService.getAll().forEach(course -> coursesService.delete(course.getUuid()));
-    }
+public class CoursesControllerTest extends AbstractControllerTest {
+    //todo test for null/empty payloads & path variables
 
     @Test
     public void shouldReturnListOfCourses() throws Exception {
-        createNewCourse(new CreateNewCourse("Maths", "001"));
-        createNewCourse(new CreateNewCourse("Physics", "002"));
+        createNewCourse(new NewCourse("Maths", "001"));
+        createNewCourse(new NewCourse("Physics", "002"));
         String expectedResponse = TestUtils.readFileAsString("response/getAllCourses.json");
 
         String response = mvc.perform(get("/courses"))
@@ -57,9 +41,9 @@ public class CoursesControllerTest {
 
     @Test
     public void shouldReturnCourseByUuid() throws Exception {
-        CreateNewCourse newCourse = new CreateNewCourse("PT", "003");
+        NewCourse newCourse = new NewCourse("PT", "003");
         ResultActions createCourseResponse = createNewCourse(newCourse);
-        String uuid = TestUtils.getUuidFromResponse(createCourseResponse);
+        String uuid = getUuidFromResponse(createCourseResponse);
 
         mvc.perform(get("/courses/{uuid}", uuid))
            .andExpect(status().isOk())
@@ -76,26 +60,30 @@ public class CoursesControllerTest {
 
     @Test
     public void shouldCreateNewCourse() throws Exception {
-        createNewCourse(new CreateNewCourse("PT", "003"));
+        createNewCourse(new NewCourse("PT", "003"));
     }
 
     @Test
     public void shouldDeleteExistingCourse() throws Exception {
-        ResultActions createCourseResponse = createNewCourse(new CreateNewCourse("PT", "003"));
-        String uuid = TestUtils.getUuidFromResponse(createCourseResponse);
+        ResultActions createCourseResponse = createNewCourse(new NewCourse("PT", "003"));
+        String uuid = getUuidFromResponse(createCourseResponse);
 
         mvc.perform(delete("/courses/{uuid}", uuid)).andExpect(status().isNoContent());
     }
 
-    private ResultActions createNewCourse(CreateNewCourse newCourse) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(newCourse);
+    @Test
+    public void shouldRegisterStudentToCourse() throws Exception {
+        String courseUuid = getUuidFromResponse(createNewCourse(new NewCourse("PT", "003")));
 
-        return mvc.perform(
-                      post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
-                  .andExpect(status().isCreated())
-                  .andExpect(content().json(requestBody, false))
-                  .andExpect(jsonPath("$.uuid", Matchers.not(Matchers.empty())));
+        String studentUuid = getUuidFromResponse(createNewStudent(new NewStudent("Tom", "Cruise")));
+
+        String requestBody = objectMapper.writeValueAsString(
+            new RegisterStudentToCourse(studentUuid));
+
+        mvc.perform(
+               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                           .content(requestBody))
+           .andExpect(status().isOk());
     }
 
     public static Stream<Arguments> byUuidMethods() {

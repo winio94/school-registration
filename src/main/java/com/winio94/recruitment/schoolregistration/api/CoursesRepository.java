@@ -9,7 +9,7 @@ public interface CoursesRepository {
 
     Optional<Course> getOne(String uuid);
 
-    Course create(CreateNewCourse createNewCourse);
+    Course create(NewCourse newCourse);
 
     void delete(String uuid);
 }

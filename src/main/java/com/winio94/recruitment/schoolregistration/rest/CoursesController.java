@@ -1,7 +1,8 @@
 package com.winio94.recruitment.schoolregistration.rest;
 
 import com.winio94.recruitment.schoolregistration.api.Course;
-import com.winio94.recruitment.schoolregistration.api.CreateNewCourse;
+import com.winio94.recruitment.schoolregistration.api.NewCourse;
+import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -35,9 +36,16 @@ public class CoursesController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> create(@RequestBody CreateNewCourse courseDto) {
-        Course newCourse = service.create(courseDto);
-        return new ResponseEntity<>(newCourse, HttpStatus.CREATED);
+    public ResponseEntity<Course> create(@RequestBody NewCourse newCourse) {
+        Course course = service.create(newCourse);
+        return new ResponseEntity<>(course, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{uuid}/register")
+    public ResponseEntity<Object> register(@PathVariable String uuid,
+                                           @RequestBody RegisterStudentToCourse registerStudentToCourse) {
+        service.register(uuid, registerStudentToCourse);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{uuid}")

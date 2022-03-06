@@ -26,7 +26,7 @@ public class DummyStudentsRepository implements StudentsRepository {
     }
 
     @Override
-    public Student create(CreateNewStudent newStudent) {
+    public Student create(NewStudent newStudent) {
         String uuid = UUID.randomUUID().toString();
         Student student = Student.from(newStudent, uuid);
         dummyStudents.put(uuid, student);

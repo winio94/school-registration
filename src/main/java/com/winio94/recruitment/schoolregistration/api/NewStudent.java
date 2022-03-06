@@ -1,10 +1,12 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-public class CreateNewStudent {
+//todo add validation (maybe xml)
+public class NewStudent {
+
     private final String firstName;
     private final String lastName;
 
-    public CreateNewStudent(String firstName, String lastName) {
+    public NewStudent(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }

@@ -26,9 +26,9 @@ public class DummyCoursesRepository implements CoursesRepository {
     }
 
     @Override
-    public Course create(CreateNewCourse createNewCourse) {
+    public Course create(NewCourse newCourse) {
         String uuid = UUID.randomUUID().toString();
-        Course course = Course.from(createNewCourse, uuid);
+        Course course = Course.from(newCourse, uuid);
         dummyCourses.put(uuid, course);
         return course;
     }

@@ -1,6 +1,6 @@
 package com.winio94.recruitment.schoolregistration.service;
 
-import com.winio94.recruitment.schoolregistration.api.CreateNewStudent;
+import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
 import java.util.List;
@@ -32,7 +32,7 @@ public class StudentsServiceImpl implements StudentsService {
     }
 
     @Override
-    public Student create(CreateNewStudent newStudent) {
+    public Student create(NewStudent newStudent) {
         log.info("Creating new student with first name = {} and last name = {}",
                  newStudent.getFirstName(), newStudent.getLastName());
         return studentsRepository.create(newStudent);
