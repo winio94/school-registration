@@ -48,6 +48,7 @@ public class CoursesServiceImpl implements CoursesService {
 
     @Override
     public void register(String uuid, RegisterStudentToCourse registerStudentToCourse) {
+        log.info("Registering student with uuid = {} for a course with uuid = {}", registerStudentToCourse.getUuid(), uuid);
 
     }
 
