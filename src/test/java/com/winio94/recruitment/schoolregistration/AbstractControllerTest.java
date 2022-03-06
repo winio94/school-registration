@@ -48,7 +48,7 @@ abstract class AbstractControllerTest {
     }
 
     ResultActions createNewStudent(NewStudent newStudent) throws Exception {
-        String requestBody = objectMapper.writeValueAsString(newStudent);
+        String requestBody = toJsonString(newStudent);
 
         return mvc.perform(
                       post("/students").contentType(MediaType.APPLICATION_JSON).content(requestBody))
@@ -58,12 +58,20 @@ abstract class AbstractControllerTest {
     }
 
     ResultActions createNewCourse(NewCourse newCourse) throws Exception {
-        String requestBody = objectMapper.writeValueAsString(newCourse);
+        String requestBody = toJsonString(newCourse);
 
         return mvc.perform(
                       post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
                   .andExpect(status().isCreated())
                   .andExpect(content().json(requestBody, false))
                   .andExpect(jsonPath("$.uuid", Matchers.not(Matchers.empty())));
+    }
+
+    String toJsonString(Object object) {
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to serialize object to json string", e);
+        }
     }
 }

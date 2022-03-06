@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import java.util.stream.Stream;
@@ -45,8 +44,7 @@ public class StudentsControllerTest extends AbstractControllerTest {
 
         mvc.perform(get("/students/{uuid}", uuid))
            .andExpect(status().isOk())
-           .andExpect(content().json(
-               new ObjectMapper().writeValueAsString(Student.from(newStudent, uuid))));
+           .andExpect(content().json(toJsonString(Student.from(newStudent, uuid))));
     }
 
     @ParameterizedTest

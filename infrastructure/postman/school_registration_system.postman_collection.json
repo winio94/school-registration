@@ -44,6 +44,25 @@
 					"response": []
 				},
 				{
+					"name": "GET courses assigned to the student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/students/{{studentUuid}}/courses",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students",
+								"{{studentUuid}}",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create student",
 					"event": [
 						{
@@ -146,6 +165,25 @@
 					"response": []
 				},
 				{
+					"name": "GET students for given course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/courses/{{courseUuid}}/students",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses",
+								"{{courseUuid}}",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create course",
 					"event": [
 						{
@@ -180,6 +218,48 @@
 							],
 							"path": [
 								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register student for a course",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code === 201) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"courseUuid\", jsonData.uuid);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"studentUuid\" : \"{{studentUuid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/courses/{{courseUuid}}/register",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses",
+								"{{courseUuid}}",
+								"register"
 							]
 						}
 					},

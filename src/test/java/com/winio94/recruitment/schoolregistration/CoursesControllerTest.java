@@ -6,11 +6,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Student;
+import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,8 +48,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
         mvc.perform(get("/courses/{uuid}", uuid))
            .andExpect(status().isOk())
-           .andExpect(
-               content().json(new ObjectMapper().writeValueAsString(Course.from(newCourse, uuid))));
+           .andExpect(content().json(toJsonString(Course.from(newCourse, uuid))));
     }
 
     @ParameterizedTest
@@ -73,17 +73,26 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldRegisterStudentToCourse() throws Exception {
-        String courseUuid = getUuidFromResponse(createNewCourse(new NewCourse("PT", "003")));
-
-        String studentUuid = getUuidFromResponse(createNewStudent(new NewStudent("Tom", "Cruise")));
-
-        String requestBody = objectMapper.writeValueAsString(
-            new RegisterStudentToCourse(studentUuid));
+        NewCourse newCourse = new NewCourse("PT", "003");
+        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
+        String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
+        String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
 
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
-                                                           .content(requestBody))
+                                                           .content(registrationRequestBody))
            .andExpect(status().isOk());
+
+        mvc.perform(get("/courses/{uuid}/students", courseUuid))
+           .andExpect(status().isOk())
+           .andExpect(content().json(
+               toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
+
+        mvc.perform(get("/students/{uuid}/courses", studentUuid))
+           .andExpect(status().isOk())
+           .andExpect(content().json(
+               toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
     }
 
     public static Stream<Arguments> byUuidMethods() {

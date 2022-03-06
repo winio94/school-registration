@@ -3,9 +3,12 @@ package com.winio94.recruitment.schoolregistration.rest;
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
+import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +25,13 @@ public class CoursesController {
 
     private final CoursesService coursesService;
     private final RegistrationService registrationService;
+    private final StudentsAndCoursesService studentsAndCoursesService;
 
-    CoursesController(CoursesService coursesService, RegistrationService registrationService) {
+    CoursesController(CoursesService coursesService, RegistrationService registrationService,
+                      StudentsAndCoursesService studentsAndCoursesService) {
         this.coursesService = coursesService;
         this.registrationService = registrationService;
+        this.studentsAndCoursesService = studentsAndCoursesService;
     }
 
     @GetMapping
@@ -49,6 +55,11 @@ public class CoursesController {
                                            @RequestBody RegisterStudentToCourse registerStudentToCourse) {
         registrationService.register(uuid, registerStudentToCourse);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{uuid}/students")
+    public Set<Student> students(@PathVariable String uuid) {
+        return studentsAndCoursesService.getAllStudentsForCourse(uuid);
     }
 
     @DeleteMapping("/{uuid}")

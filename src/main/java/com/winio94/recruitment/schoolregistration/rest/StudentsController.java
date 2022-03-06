@@ -1,9 +1,12 @@
 package com.winio94.recruitment.schoolregistration.rest;
 
+import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
+import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class StudentsController {
 
     private final StudentsService service;
+    private final StudentsAndCoursesService studentsAndCoursesService;
 
-    StudentsController(StudentsService service) {
+    StudentsController(StudentsService service,
+                       StudentsAndCoursesService studentsAndCoursesService) {
         this.service = service;
+        this.studentsAndCoursesService = studentsAndCoursesService;
     }
 
     @GetMapping
@@ -32,6 +38,11 @@ public class StudentsController {
     @GetMapping("/{uuid}")
     public Student getOne(@PathVariable String uuid) {
         return service.getOne(uuid);
+    }
+
+    @GetMapping("/{uuid}/courses")
+    public Set<Course> courses(@PathVariable String uuid) {
+        return studentsAndCoursesService.getAllCoursesForStudent(uuid);
     }
 
     @PostMapping
