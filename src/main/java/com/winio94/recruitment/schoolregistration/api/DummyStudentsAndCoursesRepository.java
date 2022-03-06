@@ -70,6 +70,22 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
                                  .collect(Collectors.toSet());
     }
 
+    @Override
+    public int getNumberOfStudentsRegistered(String courseUuid) {
+        return Optional.ofNullable(studentsPerCourse.get(courseUuid))
+                       .orElse(Collections.emptySet())
+                       .size();
+    }
+
+    @Override
+    public int getNumberOfCoursesForStudent(String studentUuid) {
+        return Math.toIntExact(studentsPerCourse.values()
+                                                .stream()
+                                                .flatMap(Set::stream)
+                                                .filter(s -> s.getUuid().equals(studentUuid))
+                                                .count());
+    }
+
     private Predicate<Entry<String, Set<Student>>> isStudentAssignedToTheCourse(
         String studentUuid) {
         return (entry) -> {
