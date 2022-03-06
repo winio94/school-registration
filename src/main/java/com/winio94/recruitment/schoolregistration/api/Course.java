@@ -1,5 +1,7 @@
 package com.winio94.recruitment.schoolregistration.api;
 
+import java.util.Objects;
+
 public class Course implements WithUuid {
 
     private final String uuid;
@@ -26,5 +28,22 @@ public class Course implements WithUuid {
 
     public static Course from(NewCourse newCourse, String uuid) {
         return new Course(uuid, newCourse.getName(), newCourse.getCode());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Course course = (Course) o;
+        return uuid.equals(course.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 }

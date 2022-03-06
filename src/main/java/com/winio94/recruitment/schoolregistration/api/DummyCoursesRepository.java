@@ -1,10 +1,10 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class DummyCoursesRepository implements CoursesRepository {
@@ -16,8 +16,8 @@ public class DummyCoursesRepository implements CoursesRepository {
     }
 
     @Override
-    public List<Course> getAll() {
-        return new ArrayList<>(dummyCourses.values());
+    public Set<Course> getAll() {
+        return new HashSet<>(dummyCourses.values());
     }
 
     @Override

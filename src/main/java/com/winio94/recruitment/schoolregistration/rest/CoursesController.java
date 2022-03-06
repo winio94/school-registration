@@ -7,7 +7,6 @@ import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
-import java.util.List;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,8 +35,8 @@ public class CoursesController {
     }
 
     @GetMapping
-    public List<Course> getAll() {
-        return coursesService.getAll();
+    public Set<Course> getAll(@RequestParam(name = "student", required = false) String studentUuid) {
+        return studentsAndCoursesService.getAllCoursesForStudent(studentUuid);
     }
 
     @GetMapping("/{uuid}")

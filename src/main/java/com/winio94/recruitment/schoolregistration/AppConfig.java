@@ -50,9 +50,10 @@ public class AppConfig {
 
     @Bean
     public StudentsAndCoursesService studentsAndCoursesService(
-        StudentsAndCoursesRepository studentsAndCoursesRepository,
-        StudentsService studentsService) {
-        return new StudentsAndCoursesServiceImpl(studentsAndCoursesRepository, studentsService);
+        StudentsAndCoursesRepository studentsAndCoursesRepository, StudentsService studentsService,
+        CoursesService coursesService) {
+        return new StudentsAndCoursesServiceImpl(studentsAndCoursesRepository, studentsService,
+                                                 coursesService);
     }
 
     @Bean

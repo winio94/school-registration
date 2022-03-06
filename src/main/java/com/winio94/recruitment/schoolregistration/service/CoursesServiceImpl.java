@@ -4,7 +4,7 @@ import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
 import com.winio94.recruitment.schoolregistration.api.Entity;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
-import java.util.List;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class CoursesServiceImpl implements CoursesService {
     }
 
     @Override
-    public List<Course> getAll() {
+    public Set<Course> getAll() {
         log.info("Fetching all courses");
         return coursesRepository.getAll();
     }
