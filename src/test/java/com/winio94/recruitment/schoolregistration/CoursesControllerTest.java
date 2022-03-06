@@ -73,6 +73,8 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldRegisterStudentToCourse() throws Exception {
+        createNewCourse(new NewCourse("Maths", "004"));
+        createNewStudent(new NewStudent("John", "Doe"));
         NewCourse newCourse = new NewCourse("PT", "003");
         NewStudent newStudent = new NewStudent("Tom", "Cruise");
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
@@ -93,6 +95,11 @@ public class CoursesControllerTest extends AbstractControllerTest {
            .andExpect(status().isOk())
            .andExpect(content().json(
                toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
+
+        mvc.perform(get("/students").param("course", courseUuid))
+           .andExpect(status().isOk())
+           .andExpect(content().json(
+               toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
     }
 
     public static Stream<Arguments> byUuidMethods() {
