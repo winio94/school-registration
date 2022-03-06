@@ -4,7 +4,9 @@ import java.util.Set;
 
 public interface StudentsAndCoursesRepository {
 
+    void addStudentToTheCourse(String courseUuid, String studentUuid);
+
     Set<Student> getAllStudentsForCourse(String courseUuid);
 
-    void addStudentToTheCourse(String courseUuid, String studentUuid);
+    Set<Course> getAllCoursesForStudent(String studentUuid);
 }

@@ -73,8 +73,9 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldRegisterStudentToCourse() throws Exception {
-        String courseUuid = getUuidFromResponse(createNewCourse(new NewCourse("PT", "003")));
+        NewCourse newCourse = new NewCourse("PT", "003");
         NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
         String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
 
@@ -87,6 +88,11 @@ public class CoursesControllerTest extends AbstractControllerTest {
            .andExpect(status().isOk())
            .andExpect(content().json(
                toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
+
+        mvc.perform(get("/students/{uuid}/courses", studentUuid))
+           .andExpect(status().isOk())
+           .andExpect(content().json(
+               toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
     }
 
     public static Stream<Arguments> byUuidMethods() {

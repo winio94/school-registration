@@ -1,5 +1,6 @@
 package com.winio94.recruitment.schoolregistration.service;
 
+import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.StudentsAndCoursesRepository;
 import java.util.Set;
@@ -20,5 +21,11 @@ public class StudentsAndCoursesServiceImpl implements StudentsAndCoursesService 
     public Set<Student> getAllStudentsForCourse(String courseUuid) {
         log.info("Fetching students that are registered for a course with uuid = {}", courseUuid);
         return studentsAndCoursesRepository.getAllStudentsForCourse(courseUuid);
+    }
+
+    @Override
+    public Set<Course> getAllCoursesForStudent(String studentUuid) {
+        log.info("Fetching courses that are assigned to the student with uuid = {}", studentUuid);
+        return studentsAndCoursesRepository.getAllCoursesForStudent(studentUuid);
     }
 }
