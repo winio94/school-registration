@@ -16,6 +16,7 @@ import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import com.winio94.recruitment.schoolregistration.service.StudentsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class AppConfig {
@@ -43,9 +44,15 @@ public class AppConfig {
     @Bean
     public RegistrationService registrationService(CoursesRepository coursesRepository,
                                                    StudentsRepository studentsRepository,
-                                                   StudentsAndCoursesRepository studentsAndCoursesService) {
+                                                   StudentsAndCoursesRepository studentsAndCoursesService,
+                                                   Environment environment) {
+        int maxNumberOfStudentsPerCourse = Integer.parseInt(
+            environment.getProperty(Environments.MAX_NUMBER_OF_STUDENTS_PER_COURSE.name(), "50"));
+        int maxNumberOfCoursesPerStudent = Integer.parseInt(
+            environment.getProperty(Environments.MAX_NUMBER_OF_COURSES_PER_STUDENT.name(), "5"));
         return new RegistrationServiceImpl(coursesRepository, studentsRepository,
-                                           studentsAndCoursesService);
+                                           studentsAndCoursesService, maxNumberOfStudentsPerCourse,
+                                           maxNumberOfCoursesPerStudent);
     }
 
     @Bean

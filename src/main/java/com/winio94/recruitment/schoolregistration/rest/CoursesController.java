@@ -5,6 +5,7 @@ import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
+import com.winio94.recruitment.schoolregistration.service.RegistrationResult;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import java.util.Set;
@@ -54,8 +55,10 @@ public class CoursesController {
     @PostMapping("/{uuid}/register")
     public ResponseEntity<Object> register(@PathVariable String uuid,
                                            @RequestBody RegisterStudentToCourse registerStudentToCourse) {
-        registrationService.register(uuid, registerStudentToCourse);
-        return ResponseEntity.ok().build();
+        RegistrationResult registrationResult = registrationService.register(uuid,
+                                                                             registerStudentToCourse);
+        return registrationResult.isSuccessful() ? ResponseEntity.ok().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/{uuid}/students")

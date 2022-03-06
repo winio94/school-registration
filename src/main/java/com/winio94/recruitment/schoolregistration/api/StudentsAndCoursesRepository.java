@@ -13,4 +13,8 @@ public interface StudentsAndCoursesRepository {
     Set<Course> getAllCoursesWithoutAnyStudent();
 
     Set<Student> getAllStudentsNotRegisteredToAnyCourse();
+
+    int getNumberOfStudentsRegistered(String courseUuid);
+
+    int getNumberOfCoursesForStudent(String studentUuid);
 }
