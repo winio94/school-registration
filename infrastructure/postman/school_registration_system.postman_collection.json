@@ -26,6 +26,52 @@
 					"response": []
 				},
 				{
+					"name": "GET all students registered to specific course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/students?course={{courseUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students"
+							],
+							"query": [
+								{
+									"key": "course",
+									"value": "{{courseUuid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all students not registered to any course",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/students?notRegisteredToAnyCourse=true",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students"
+							],
+							"query": [
+								{
+									"key": "notRegisteredToAnyCourse",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "GET student by uuid",
 					"request": {
 						"method": "GET",
@@ -141,6 +187,52 @@
 							],
 							"path": [
 								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all courses assigned to specific student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/courses?student={{studentUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses"
+							],
+							"query": [
+								{
+									"key": "student",
+									"value": "{{studentUuid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET all courses without any student",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/courses?withoutAnyStudent=true",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses"
+							],
+							"query": [
+								{
+									"key": "withoutAnyStudent",
+									"value": "true"
+								}
 							]
 						}
 					},
