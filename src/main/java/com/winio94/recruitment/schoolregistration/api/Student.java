@@ -1,6 +1,6 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-public class Student {
+public class Student implements WithUuid {
 
     private final String uuid;
     private final String firstName;
@@ -12,7 +12,7 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public static Student from(CreateNewStudent newStudent, String uuid) {
+    public static Student from(NewStudent newStudent, String uuid) {
         return new Student(uuid, newStudent.getFirstName(), newStudent.getLastName());
     }
 

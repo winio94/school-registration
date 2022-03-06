@@ -1,7 +1,7 @@
 package com.winio94.recruitment.schoolregistration.service;
 
+import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
-import com.winio94.recruitment.schoolregistration.api.CreateNewStudent;
 import java.util.List;
 
 public interface StudentsService {
@@ -10,7 +10,7 @@ public interface StudentsService {
 
     Student getOne(String uuid);
 
-    Student create(CreateNewStudent newStudent);
+    Student create(NewStudent newStudent);
 
     void delete(String uuid);
 }

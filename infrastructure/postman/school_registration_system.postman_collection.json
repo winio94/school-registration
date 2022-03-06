@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "66020058-73ec-4479-95a5-d3057e8178c2",
+		"name": "School registration system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "students",
+			"item": [
+				{
+					"name": "GET all students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/students",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET student by uuid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/students/{{studentUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students",
+								"{{studentUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code === 201) {",
+									"    var jsonData = JSON.parse(responseBody);",
+									"    postman.setEnvironmentVariable(\"studentUuid\", jsonData.uuid);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"firstName\" : \"John\",\n\t\"lastName\": \"Doe\"\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/students",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete student",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/students/{{studentUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"students",
+								"{{studentUuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "courses",
+			"item": [
+				{
+					"name": "GET all courses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/courses",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET course by uuid",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{SERVER}}/courses/{{courseUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses",
+								"{{courseUuid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create course",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code === 201) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"courseUuid\", jsonData.uuid);\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Maths\",\n\t\"code\": \"101\"\n}"
+						},
+						"url": {
+							"raw": "{{SERVER}}/courses",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete course",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{SERVER}}/courses/{{courseUuid}}",
+							"host": [
+								"{{SERVER}}"
+							],
+							"path": [
+								"courses",
+								"{{courseUuid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

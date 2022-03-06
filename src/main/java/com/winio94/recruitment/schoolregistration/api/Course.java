@@ -1,6 +1,6 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-public class Course {
+public class Course implements WithUuid {
 
     private final String uuid;
     private final String name;
@@ -24,7 +24,7 @@ public class Course {
         return code;
     }
 
-    public static Course from(CreateNewCourse createNewCourse, String uuid) {
-        return new Course(uuid, createNewCourse.getName(), createNewCourse.getCode());
+    public static Course from(NewCourse newCourse, String uuid) {
+        return new Course(uuid, newCourse.getName(), newCourse.getCode());
     }
 }

@@ -1,6 +1,6 @@
 package com.winio94.recruitment.schoolregistration.rest;
 
-import com.winio94.recruitment.schoolregistration.api.CreateNewStudent;
+import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import java.util.List;
@@ -35,7 +35,7 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> create(@RequestBody CreateNewStudent studentDto) {
+    public ResponseEntity<Student> create(@RequestBody NewStudent studentDto) {
         Student newStudent = service.create(studentDto);
         return new ResponseEntity<>(newStudent, HttpStatus.CREATED);
     }
