@@ -5,7 +5,6 @@ import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
-import java.util.List;
 import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,29 +14,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/students")
 public class StudentsController {
 
-    private final StudentsService service;
+    private final StudentsService studentsService;
     private final StudentsAndCoursesService studentsAndCoursesService;
 
-    StudentsController(StudentsService service,
+    StudentsController(StudentsService studentsService,
                        StudentsAndCoursesService studentsAndCoursesService) {
-        this.service = service;
+        this.studentsService = studentsService;
         this.studentsAndCoursesService = studentsAndCoursesService;
     }
 
     @GetMapping
-    public List<Student> getAll() {
-        return service.getAll();
+    public Set<Student> getAll(@RequestParam(name = "course", required = false) String courseUuid) {
+        return studentsAndCoursesService.getAllStudentsForCourse(courseUuid);
     }
 
     @GetMapping("/{uuid}")
     public Student getOne(@PathVariable String uuid) {
-        return service.getOne(uuid);
+        return studentsService.getOne(uuid);
     }
 
     @GetMapping("/{uuid}/courses")
@@ -47,13 +47,13 @@ public class StudentsController {
 
     @PostMapping
     public ResponseEntity<Student> create(@RequestBody NewStudent studentDto) {
-        Student newStudent = service.create(studentDto);
+        Student newStudent = studentsService.create(studentDto);
         return new ResponseEntity<>(newStudent, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Object> delete(@PathVariable String uuid) {
-        service.delete(uuid);
+        studentsService.delete(uuid);
         return ResponseEntity.noContent().build();
     }
 
