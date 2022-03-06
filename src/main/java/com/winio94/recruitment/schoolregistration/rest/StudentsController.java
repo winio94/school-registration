@@ -31,8 +31,10 @@ public class StudentsController {
     }
 
     @GetMapping
-    public Set<Student> getAll(@RequestParam(name = "course", required = false) String courseUuid) {
-        return studentsAndCoursesService.getAllStudentsForCourse(courseUuid);
+    public Set<Student> getAll(@RequestParam(name = "course", required = false) String courseUuid,
+                               @RequestParam(required = false) boolean notRegisteredToAnyCourse) {
+        return studentsAndCoursesService.getAllStudentsFiltered(courseUuid,
+                                                                notRegisteredToAnyCourse);
     }
 
     @GetMapping("/{uuid}")
@@ -42,7 +44,7 @@ public class StudentsController {
 
     @GetMapping("/{uuid}/courses")
     public Set<Course> courses(@PathVariable String uuid) {
-        return studentsAndCoursesService.getAllCoursesForStudent(uuid);
+        return studentsAndCoursesService.getAllCoursesFiltered(uuid, false);
     }
 
     @PostMapping
