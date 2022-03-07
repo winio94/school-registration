@@ -14,9 +14,12 @@ import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesServ
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesServiceImpl;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import com.winio94.recruitment.schoolregistration.service.StudentsServiceImpl;
+import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 public class AppConfig {
@@ -67,5 +70,12 @@ public class AppConfig {
     public StudentsAndCoursesRepository studentsAndCoursesRepository(
         StudentsRepository studentsRepository, CoursesRepository coursesRepository) {
         return new DummyStudentsAndCoursesRepository(studentsRepository, coursesRepository);
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(Locale.ENGLISH);
+        return slr;
     }
 }

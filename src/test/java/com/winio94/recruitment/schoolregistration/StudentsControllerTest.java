@@ -9,10 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import java.util.Collections;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -81,7 +82,7 @@ public class StudentsControllerTest extends AbstractControllerTest {
             createNewStudent(studentNotRegisteredToAnyCourse));
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
-        String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
+        String registrationRequestBody = toJsonString(new Registration(studentUuid));
 
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
@@ -98,6 +99,34 @@ public class StudentsControllerTest extends AbstractControllerTest {
            .andExpect(content().json(toJsonString(Collections.singletonList(
                Student.from(studentNotRegisteredToAnyCourse,
                             studentNotRegisteredToAnyCourseUuid)))));
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidStudents")
+    public void invalidRequestBodyTest(NewStudent newStudent, String errorResponseBody)
+        throws Exception {
+        String requestBody = toJsonString(newStudent);
+
+        mvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
+    }
+
+    public static Stream<Arguments> invalidStudents() {
+        return Stream.of(Arguments.of(new NewStudent(null, null),
+                                      "response/error/missingFirstNameAndLastName.json"),
+                         Arguments.of(new NewStudent("Monica", null),
+                                      "response/error/missingLastName.json"),
+                         Arguments.of(new NewStudent(null, "Bellucci"),
+                                      "response/error/missingFirstName.json"),
+                         Arguments.of(new NewStudent("emptyLastName", ""),
+                                      "response/error/missingLastName.json"),
+                         Arguments.of(new NewStudent("", "emptyFirstName"),
+                                      "response/error/missingFirstName.json"), Arguments.of(
+                new NewStudent("tooLongLastName", StringUtils.repeat("a", 101)),
+                "response/error/tooLongLastName.json"), Arguments.of(
+                new NewStudent(StringUtils.repeat("a", 101), "tooLongFirstName"),
+                "response/error/tooLongFirstName.json"));
     }
 
     public static Stream<Arguments> byUuidMethods() {

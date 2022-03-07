@@ -2,13 +2,14 @@ package com.winio94.recruitment.schoolregistration.rest;
 
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
 import com.winio94.recruitment.schoolregistration.service.RegistrationResult;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import java.util.Set;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,16 +48,15 @@ public class CoursesController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> create(@RequestBody NewCourse newCourse) {
+    public ResponseEntity<Course> create(@RequestBody @Valid NewCourse newCourse) {
         Course course = coursesService.create(newCourse);
         return new ResponseEntity<>(course, HttpStatus.CREATED);
     }
 
     @PostMapping("/{uuid}/register")
     public ResponseEntity<Object> register(@PathVariable String uuid,
-                                           @RequestBody RegisterStudentToCourse registerStudentToCourse) {
-        RegistrationResult registrationResult = registrationService.register(uuid,
-                                                                             registerStudentToCourse);
+                                           @RequestBody Registration registration) {
+        RegistrationResult registrationResult = registrationService.register(uuid, registration);
         return registrationResult.isSuccessful() ? ResponseEntity.ok().build()
             : ResponseEntity.badRequest().build();
     }

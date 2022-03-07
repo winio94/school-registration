@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Registration;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -26,14 +26,14 @@ class RegistrationErrorTest extends AbstractControllerTest {
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
                                                            .content(toJsonString(
-                                                               new RegisterStudentToCourse(
+                                                               new Registration(
                                                                    student1Uuid))))
            .andExpect(status().isOk());
 
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
                                                            .content(toJsonString(
-                                                               new RegisterStudentToCourse(
+                                                               new Registration(
                                                                    student2Uuid))))
            .andExpect(status().isBadRequest());
 
@@ -51,14 +51,14 @@ class RegistrationErrorTest extends AbstractControllerTest {
         mvc.perform(
                post("/courses/{uuid}/register", course1Uuid).contentType(MediaType.APPLICATION_JSON)
                                                             .content(toJsonString(
-                                                                new RegisterStudentToCourse(
+                                                                new Registration(
                                                                     studentUuid))))
            .andExpect(status().isOk());
 
         mvc.perform(
                post("/courses/{uuid}/register", course2Uuid).contentType(MediaType.APPLICATION_JSON)
                                                             .content(toJsonString(
-                                                                new RegisterStudentToCourse(
+                                                                new Registration(
                                                                     studentUuid))))
            .andExpect(status().isBadRequest());
 

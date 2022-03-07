@@ -1,0 +1,21 @@
+<constraint-mappings
+  xmlns="http://xmlns.jcp.org/xml/ns/validation/mapping"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/validation/mapping
+  http://xmlns.jcp.org/xml/ns/validation/mapping/validation-mapping-2.0.xsd" version="2.0">
+
+  <bean class="com.winio94.recruitment.schoolregistration.api.NewStudent">
+    <getter name="firstName">
+      <constraint annotation="javax.validation.constraints.NotEmpty"/>
+      <constraint annotation="javax.validation.constraints.Size">
+        <element name="max">100</element>
+      </constraint>
+    </getter>
+    <getter name="lastName">
+      <constraint annotation="javax.validation.constraints.NotEmpty"/>
+      <constraint annotation="javax.validation.constraints.Size">
+        <element name="max">100</element>
+      </constraint>
+    </getter>
+  </bean>
+</constraint-mappings>

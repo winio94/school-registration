@@ -9,10 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import java.util.Collections;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -79,7 +80,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
         NewCourse newCourse = new NewCourse("PT", "003");
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
-        String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
+        String registrationRequestBody = toJsonString(new Registration(studentUuid));
 
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
@@ -106,7 +107,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
             createNewCourse(courseWithoutAnyStudent));
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
-        String registrationRequestBody = toJsonString(new RegisterStudentToCourse(studentUuid));
+        String registrationRequestBody = toJsonString(new Registration(studentUuid));
 
         mvc.perform(
                post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
@@ -123,6 +124,31 @@ public class CoursesControllerTest extends AbstractControllerTest {
            .andExpect(content().json(toJsonString(Collections.singletonList(
                Course.from(courseWithoutAnyStudent, courseWithoutAnyStudentUuid)))));
     }
+
+    @ParameterizedTest
+    @MethodSource("invalidCourses")
+    public void invalidCourseTest(NewCourse newCourse, String errorResponseBody)
+        throws Exception {
+        String requestBody = toJsonString(newCourse);
+
+        mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
+    }
+
+    public static Stream<Arguments> invalidCourses() {
+        return Stream.of(
+            Arguments.of(new NewCourse(null, null), "response/error/missingNameAndCode.json"),
+            Arguments.of(new NewCourse("Maths", null), "response/error/missingCode.json"),
+            Arguments.of(new NewCourse(null, "101"), "response/error/missingName.json"),
+            Arguments.of(new NewCourse("emptyCode", ""), "response/error/missingCode.json"),
+            Arguments.of(new NewCourse("", "emptyName"), "response/error/missingName.json"),
+            Arguments.of(new NewCourse("tooLongCode", StringUtils.repeat("a", 101)),
+                         "response/error/tooLongCode.json"),
+            Arguments.of(new NewCourse(StringUtils.repeat("a", 101), "some code"),
+                         "response/error/tooLongName.json"));
+    }
+
 
     public static Stream<Arguments> byUuidMethods() {
         return Stream.of(Arguments.of(get("/courses/{uuid}", "suchCourseDoesNotExist")),

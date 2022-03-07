@@ -1,6 +1,5 @@
 package com.winio94.recruitment.schoolregistration.api;
 
-//todo add validation (maybe xml)
 public class NewStudent {
 
     private final String firstName;
