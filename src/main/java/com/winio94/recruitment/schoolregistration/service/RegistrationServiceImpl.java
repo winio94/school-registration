@@ -2,7 +2,7 @@ package com.winio94.recruitment.schoolregistration.service;
 
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
 import com.winio94.recruitment.schoolregistration.api.Entity;
-import com.winio94.recruitment.schoolregistration.api.RegisterStudentToCourse;
+import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.StudentsAndCoursesRepository;
 import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
 import org.slf4j.Logger;
@@ -31,21 +31,21 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public RegistrationResult register(String courseUuid,
-                                       RegisterStudentToCourse registerStudentToCourse) {
+                                       Registration registration) {
         log.info("Registering student with uuid = {} for a course with uuid = {}",
-                 registerStudentToCourse.getUuid(), courseUuid);
+                 registration.getUuid(), courseUuid);
         coursesRepository.getOne(courseUuid)
                          .orElseThrow(Errors.notFoundError(courseUuid, Entity.COURSE));
-        studentsRepository.getOne(registerStudentToCourse.getUuid())
+        studentsRepository.getOne(registration.getUuid())
                           .orElseThrow(Errors.notFoundError(courseUuid, Entity.STUDENT));
         if (isNumberOfStudentsExceeded(courseUuid)) {
             return numberOfStudentsExceededError();
         }
-        if (isNumberOfCoursesExceeded(registerStudentToCourse)) {
+        if (isNumberOfCoursesExceeded(registration)) {
             return numberOfCoursesExceededError();
         }
         studentsAndCoursesRepository.addStudentToTheCourse(courseUuid,
-                                                           registerStudentToCourse.getUuid());
+                                                           registration.getUuid());
         return RegistrationResult.SUCCESS;
     }
 
@@ -55,9 +55,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         return numberOfStudentsRegisteredToCourse >= maxNumberOfStudentsPerCourse;
     }
 
-    private boolean isNumberOfCoursesExceeded(RegisterStudentToCourse registerStudentToCourse) {
+    private boolean isNumberOfCoursesExceeded(Registration registration) {
         int numberOfCoursesAssignedToStudent = studentsAndCoursesRepository.getNumberOfCoursesForStudent(
-            registerStudentToCourse.getUuid());
+            registration.getUuid());
         return numberOfCoursesAssignedToStudent >= maxNumberOfCoursesPerStudent;
     }
 

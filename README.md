@@ -21,6 +21,17 @@ Provide the following REST API:
 + (TASK7) Filter all courses without any students
 + (TASK8) Filter all students without any courses
 
+TODO tasks
+* missing validation 
+  * missing path variables
+  * uuid (path variables/query params/registration request) schema validation
+* validation of uniqueness
+    * unique student
+    * unique course
+    * unique registration for given student and course
+* automatic deregistration from a course when student/course is deleted, or constraint violation
+  error
+
 -----------------------------------------------------------------------
 
 <h3>Building project</h3>

@@ -6,6 +6,7 @@ import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import java.util.Set;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,7 +49,7 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> create(@RequestBody NewStudent studentDto) {
+    public ResponseEntity<Student> create(@RequestBody @Valid NewStudent studentDto) {
         Student newStudent = studentsService.create(studentDto);
         return new ResponseEntity<>(newStudent, HttpStatus.CREATED);
     }
