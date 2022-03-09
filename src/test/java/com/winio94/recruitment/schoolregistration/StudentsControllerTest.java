@@ -25,8 +25,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 public class StudentsControllerTest extends AbstractControllerTest {
 
-    //todo test for null/empty payloads & path variables
-
     @Test
     public void shouldReturnListOfStudents() throws Exception {
         createNewStudent(new NewStudent("John", "Doe"));

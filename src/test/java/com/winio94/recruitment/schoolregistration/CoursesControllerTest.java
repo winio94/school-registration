@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class CoursesControllerTest extends AbstractControllerTest {
-    //todo test for null/empty payloads & path variables
 
     @Test
     public void shouldReturnListOfCourses() throws Exception {
@@ -127,8 +126,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @ParameterizedTest
     @MethodSource("invalidCourses")
-    public void invalidCourseTest(NewCourse newCourse, String errorResponseBody)
-        throws Exception {
+    public void invalidCourseTest(NewCourse newCourse, String errorResponseBody) throws Exception {
         String requestBody = toJsonString(newCourse);
 
         mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))

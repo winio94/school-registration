@@ -9,18 +9,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
-import com.winio94.recruitment.schoolregistration.service.CoursesService;
-import com.winio94.recruitment.schoolregistration.service.StudentsService;
+import com.winio94.recruitment.schoolregistration.db.DbCourseRepository;
+import com.winio94.recruitment.schoolregistration.db.DbRegistrationRepository;
+import com.winio94.recruitment.schoolregistration.db.DbStudentsRepository;
 import java.io.UnsupportedEncodingException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-@WebMvcTest
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 abstract class AbstractControllerTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -29,15 +34,19 @@ abstract class AbstractControllerTest {
     MockMvc mvc;
 
     @Autowired
-    private CoursesService coursesService;
+    private DbRegistrationRepository dbRegistrationRepository;
 
     @Autowired
-    private StudentsService studentsService;
+    private DbCourseRepository dbCourseRepository;
+
+    @Autowired
+    private DbStudentsRepository dbStudentsRepository;
 
     @BeforeEach
     void beforeEach() {
-        coursesService.getAll().forEach(course -> coursesService.delete(course.getUuid()));
-        studentsService.getAll().forEach(student -> studentsService.delete(student.getUuid()));
+        dbRegistrationRepository.deleteAll();
+        dbCourseRepository.deleteAll();
+        dbStudentsRepository.deleteAll();
     }
 
     String getUuidFromResponse(ResultActions createEntityResponse)
