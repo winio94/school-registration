@@ -21,40 +21,73 @@ Provide the following REST API:
 + (TASK7) Filter all courses without any students
 + (TASK8) Filter all students without any courses
 
-TODO tasks
-* missing validation 
-  * missing path variables
-  * uuid (path variables/query params/registration request) schema validation
-* validation of uniqueness
-    * unique student
-    * unique course
-    * unique registration for given student and course
-* automatic deregistration from a course when student/course is deleted, or constraint violation
-  error
-
 -----------------------------------------------------------------------
 
-<h3>Building project</h3>
+<h4>Running tests</h4>
 
-* To build and install locally, skipping all tests: `mvn clean install -DskipTests=true`
-* To run unit tests only: `mvn clean verify`
+* To run unit tests, execute following maven command from project root
+  directory : `mvn clean verify`
+
+<h4>Building project</h4>
+
+* To build project, execute following maven command from project root
+  directory : `mvn clean install`
+* To build project without running tests, execute following maven command from project root
+  directory : `mvn clean install -DskipTests=true`
+
+<h4>Running application</h4>
+<h5>Maven</h5>
+
+* To run application locally from generated sources using maven, execute following maven command
+  from project root directory :
+  `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
+    * REST API will be accessible on port 8080
+    * Application will store data in the in-memory H2 database
+
+<h5>Docker</h5>
+To run application locally, execute following docker-compose command from project root directory :
+`docker-compose up -d`.
+
+* REST API will be accessible on port 6868 (running as a container)
+* Application will store data in MySQL database (running as a separate container)
+
+Checking logs
+
+* Run `docker ps`
+    * Find Container ID for running application `school-registration-app`
+* Run `docker logs <CONTAINER_ID>`
 
 -----------------------------------------------------------------------
 
 <h3>Postman setup</h3>
-TODO
+All existing REST APIs can be executed through Postman REST API client
 
------------------------------------------------------------------------
-
-<h3>Code formatting</h3>
-TODO
+* Postman collection can be
+  found [here](./infrastructure/postman/school_registration_system.postman_collection.json)
+* Postman environment for application built via maven command can be
+  found [here](./infrastructure/postman/LOCAL.postman_environment.json)
+* Postman environment for application built docker compose command can be
+  found [here](./infrastructure/postman/LOCAL_DOCKER.postman_environment.json)
 
 -----------------------------------------------------------------------
 
 <h3>REST API documentation</h3>
-TODO
-
+* API contract can be opened via https://editor.swagger.io/#. File can be found [here](./infrastructure/contract/openapi.yaml)
+* API documentation can also be accessed via web browser at `http://<ADDRESS>:<PORT>/swagger-ui/index.html#`
+  e.g. [here](http://localhost:8080/swagger-ui/index.html#), provided application is up and running. 
 -----------------------------------------------------------------------
 
-Build status TODO
-https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge
+TODO tasks
+
+* request validation
+    * uuid (path variables/query params/registration request) schema validation - 36 characters
+* validation of uniqueness
+    * unique student (probably would require some additional property, like e.g. Personal ID Number)
+    * unique course (unique code)
+    * unique registration for given student and course
+* API for removing registration for a given student (currently there is no such API, and once
+  student registers to some course, neither student nor course cannot be deleted)
+* Proper error handling for database integrity errors
+    * removing student/course while there is an existing registration for them
+    * attempting to register student to given course for second time
+* Setting up CI/CD (e.g. Github actions)
