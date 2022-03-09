@@ -1,0 +1,357 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /students:
+    get:
+      tags:
+      - students-controller
+      operationId: getAll
+      parameters:
+      - name: course
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: notRegisteredToAnyCourse
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      tags:
+      - students-controller
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewStudent'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Student'
+  /courses:
+    get:
+      tags:
+      - courses-controller
+      operationId: getAll_1
+      parameters:
+      - name: student
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: withoutAnyStudent
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+    post:
+      tags:
+      - courses-controller
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCourse'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Course'
+  /courses/{uuid}/register:
+    post:
+      tags:
+      - courses-controller
+      operationId: register
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Registration'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /students/{uuid}:
+    get:
+      tags:
+      - students-controller
+      operationId: getOne
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Student'
+    delete:
+      tags:
+      - students-controller
+      operationId: delete
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /students/{uuid}/courses:
+    get:
+      tags:
+      - students-controller
+      operationId: courses
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+  /courses/{uuid}:
+    get:
+      tags:
+      - courses-controller
+      operationId: getOne_1
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Course'
+    delete:
+      tags:
+      - courses-controller
+      operationId: delete_1
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /courses/{uuid}/students:
+    get:
+      tags:
+      - courses-controller
+      operationId: students
+      parameters:
+      - name: uuid
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                uniqueItems: true
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+components:
+  schemas:
+    NewStudent:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+    Student:
+      type: object
+      properties:
+        uuid:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+    NewCourse:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+    Course:
+      type: object
+      properties:
+        uuid:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+    Registration:
+      type: object
+      properties:
+        studentUuid:
+          type: string

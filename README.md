@@ -72,8 +72,9 @@ All existing REST APIs can be executed through Postman REST API client
 -----------------------------------------------------------------------
 
 <h3>REST API documentation</h3>
-TODO
-
+* API contract can be opened via https://editor.swagger.io/#. File can be found [here](./infrastructure/contract/openapi.yaml)
+* API documentation can also be accessed via web browser at `http://<ADDRESS>:<PORT>/swagger-ui/index.html#`
+  e.g. [here](http://localhost:8080/swagger-ui/index.html#), provided application is up and running. 
 -----------------------------------------------------------------------
 
 TODO tasks
