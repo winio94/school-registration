@@ -45,8 +45,8 @@ Provide the following REST API:
     * Application will store data in the in-memory H2 database
 
 <h5>Docker</h5>
-To run application locally, execute following docker-compose command from project root directory :
-`docker-compose up -d`.
+
+To run application locally, execute following docker-compose command from project root directory : `docker-compose up -d`
 
 * REST API will be accessible on port 6868 (running as a container)
 * Application will store data in MySQL database (running as a separate container)
@@ -72,10 +72,11 @@ All existing REST APIs can be executed through Postman REST API client
 -----------------------------------------------------------------------
 
 <h3>REST API documentation</h3>
+
 * API contract can be opened via https://editor.swagger.io/#. File can be found [here](./infrastructure/contract/openapi.yaml)
-* API documentation can also be accessed via web browser at `http://<ADDRESS>:<PORT>/swagger-ui/index.html#`
-  e.g. [here](http://localhost:8080/swagger-ui/index.html#), provided application is up and running. 
------------------------------------------------------------------------
+* API documentation can also be accessed via web browser [here](http://localhost:8080/swagger-ui/index.html), provided application is up and running. 
+
+  -----------------------------------------------------------------------
 
 TODO tasks
 
