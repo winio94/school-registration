@@ -1,11 +1,14 @@
 package com.winio94.recruitment.schoolregistration;
 
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
-import com.winio94.recruitment.schoolregistration.api.DummyCoursesRepository;
-import com.winio94.recruitment.schoolregistration.api.DummyStudentsAndCoursesRepository;
-import com.winio94.recruitment.schoolregistration.api.DummyStudentsRepository;
 import com.winio94.recruitment.schoolregistration.api.StudentsAndCoursesRepository;
 import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
+import com.winio94.recruitment.schoolregistration.db.CoursesRepositoryImpl;
+import com.winio94.recruitment.schoolregistration.db.DbCourseRepository;
+import com.winio94.recruitment.schoolregistration.db.DbRegistrationRepository;
+import com.winio94.recruitment.schoolregistration.db.DbStudentsRepository;
+import com.winio94.recruitment.schoolregistration.db.StudentsAndCoursesRepositoryImpl;
+import com.winio94.recruitment.schoolregistration.db.StudentsRepositoryImpl;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
 import com.winio94.recruitment.schoolregistration.service.CoursesServiceImpl;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
@@ -15,6 +18,7 @@ import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesServ
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import com.winio94.recruitment.schoolregistration.service.StudentsServiceImpl;
 import java.util.Locale;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -24,14 +28,29 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @Configuration
 public class AppConfig {
 
+    @Autowired
+    DbStudentsRepository dbStudentsRepository;
+
+    @Autowired
+    DbCourseRepository dbCourseRepository;
+
+    @Autowired
+    DbRegistrationRepository dbRegistrationRepository;
+
     @Bean
     public StudentsRepository studentsRepository() {
-        return new DummyStudentsRepository();
+        return new StudentsRepositoryImpl(dbStudentsRepository);
     }
 
     @Bean
     public CoursesRepository coursesRepository() {
-        return new DummyCoursesRepository();
+        return new CoursesRepositoryImpl(dbCourseRepository);
+    }
+
+    @Bean
+    public StudentsAndCoursesRepository studentsAndCoursesRepository() {
+        return new StudentsAndCoursesRepositoryImpl(dbRegistrationRepository, dbStudentsRepository,
+                                                    dbCourseRepository);
     }
 
     @Bean
@@ -64,12 +83,6 @@ public class AppConfig {
         CoursesService coursesService) {
         return new StudentsAndCoursesServiceImpl(studentsAndCoursesRepository, studentsService,
                                                  coursesService);
-    }
-
-    @Bean
-    public StudentsAndCoursesRepository studentsAndCoursesRepository(
-        StudentsRepository studentsRepository, CoursesRepository coursesRepository) {
-        return new DummyStudentsAndCoursesRepository(studentsRepository, coursesRepository);
     }
 
     @Bean

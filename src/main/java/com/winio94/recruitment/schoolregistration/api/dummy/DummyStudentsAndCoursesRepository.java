@@ -1,5 +1,10 @@
-package com.winio94.recruitment.schoolregistration.api;
+package com.winio94.recruitment.schoolregistration.api.dummy;
 
+import com.winio94.recruitment.schoolregistration.api.Course;
+import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
+import com.winio94.recruitment.schoolregistration.api.Student;
+import com.winio94.recruitment.schoolregistration.api.StudentsAndCoursesRepository;
+import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
