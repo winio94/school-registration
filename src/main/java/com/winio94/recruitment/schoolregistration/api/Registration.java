@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Registration implements WithUuid {
 
+    @Uuid
     private final String studentUuid;
 
     public Registration(@JsonProperty("studentUuid") String studentUuid) {

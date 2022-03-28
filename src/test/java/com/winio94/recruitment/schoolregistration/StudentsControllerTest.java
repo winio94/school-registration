@@ -7,11 +7,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -110,6 +113,18 @@ public class StudentsControllerTest extends AbstractControllerTest {
            .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
     }
 
+    @ParameterizedTest
+    @MethodSource("withInvalidUuidParam")
+    public void shouldReturnBadRequestErrorWhenUuidParamHasInvalidFormat(
+        RequestBuilder requestBuilder, String paramName) throws Exception {
+
+        mvc.perform(requestBuilder)
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(
+               TestUtils.readFileAsString("response/error/invalidUuidParam.json")
+                        .replaceAll("<PARAM_NAME>", paramName), true));
+    }
+
     public static Stream<Arguments> invalidStudents() {
         return Stream.of(Arguments.of(new NewStudent(null, null),
                                       "response/error/missingFirstNameAndLastName.json"),
@@ -130,6 +145,20 @@ public class StudentsControllerTest extends AbstractControllerTest {
     public static Stream<Arguments> byUuidMethods() {
         return Stream.of(Arguments.of(get("/students/{uuid}", "suchStudentDoesNotExist")),
                          Arguments.of(delete("/students/{uuid}", "suchStudentDoesNotExist")));
+    }
+
+    public static Stream<Arguments> withInvalidUuidParam() {
+        String invalidUuid = "invalidUuid";
+
+        Stream<Arguments> invalidPathParams = Stream.of(
+            Arguments.of(get("/students/{uuid}", invalidUuid), "uuid"),
+            Arguments.of(get("/students/{uuid}/courses", invalidUuid), "uuid"),
+            Arguments.of(delete("/students/{uuid}", invalidUuid), "uuid"));
+
+        Stream<Arguments> invalidQueryParams = Stream.of(
+            Arguments.of(get("/students").param("course", invalidUuid), "courseUuid"));
+
+        return Stream.concat(invalidPathParams, invalidQueryParams);
     }
 }
 

@@ -6,12 +6,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -126,12 +129,26 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @ParameterizedTest
     @MethodSource("invalidCourses")
-    public void invalidCourseTest(NewCourse newCourse, String errorResponseBody) throws Exception {
+    public void shouldReturnBadRequestErrorWhenCreatingCourseWithInvalidData(NewCourse newCourse,
+                                                                             String errorResponseBody)
+        throws Exception {
         String requestBody = toJsonString(newCourse);
 
         mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
            .andExpect(status().isBadRequest())
            .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
+    }
+
+    @ParameterizedTest
+    @MethodSource("withInvalidUuidParam")
+    public void shouldReturnBadRequestErrorWhenUuidParamHasInvalidFormat(
+        RequestBuilder requestBuilder, String paramName) throws Exception {
+
+        mvc.perform(requestBuilder)
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(
+               TestUtils.readFileAsString("response/error/invalidUuidParam.json")
+                        .replaceAll("<PARAM_NAME>", paramName), true));
     }
 
     public static Stream<Arguments> invalidCourses() {
@@ -147,10 +164,34 @@ public class CoursesControllerTest extends AbstractControllerTest {
                          "response/error/tooLongName.json"));
     }
 
-
     public static Stream<Arguments> byUuidMethods() {
-        return Stream.of(Arguments.of(get("/courses/{uuid}", "suchCourseDoesNotExist")),
-                         Arguments.of(delete("/courses/{uuid}", "suchCourseDoesNotExist")));
+        return Stream.of(Arguments.of(get("/courses/{uuid}", UUID.randomUUID().toString())),
+                         Arguments.of(delete("/courses/{uuid}", UUID.randomUUID().toString())));
+    }
+
+    public static Stream<Arguments> withInvalidUuidParam() throws JsonProcessingException {
+        String invalidUuid = "invalidUuid";
+        String registrationRequest = new ObjectMapper().writeValueAsString(
+            new Registration(UUID.randomUUID().toString()));
+
+        Stream<Arguments> invalidPathParams = Stream.of(
+            Arguments.of(get("/courses/{uuid}", invalidUuid), "uuid"),
+            Arguments.of(get("/courses/{uuid}/students", invalidUuid), "uuid"),
+            Arguments.of(delete("/courses/{uuid}", invalidUuid), "uuid"), Arguments.of(
+                post("/courses/{uuid}/register", invalidUuid).contentType(
+                    MediaType.APPLICATION_JSON).content(registrationRequest), "uuid"));
+
+        Stream<Arguments> invalidQueryParams = Stream.of(
+            Arguments.of(get("/courses").param("student", invalidUuid), "studentUuid"));
+
+        registrationRequest = new ObjectMapper().writeValueAsString(new Registration(invalidUuid));
+
+        Stream<Arguments> invalidRequestBodyParams = Stream.of(Arguments.of(
+            post("/courses/{uuid}/register", UUID.randomUUID().toString()).contentType(
+                MediaType.APPLICATION_JSON).content(registrationRequest), "studentUuid"));
+
+        return Stream.concat(Stream.concat(invalidPathParams, invalidQueryParams),
+                             invalidRequestBodyParams);
     }
 }
 
