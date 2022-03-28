@@ -3,25 +3,25 @@ info:
   title: OpenAPI definition
   version: v0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 paths:
   /students:
     get:
       tags:
-      - students-controller
+        - students-controller
       operationId: getAll
       parameters:
-      - name: course
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: notRegisteredToAnyCourse
-        in: query
-        required: false
-        schema:
-          type: boolean
+        - name: course
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: notRegisteredToAnyCourse
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         "400":
           description: Bad Request
@@ -42,7 +42,7 @@ paths:
                   $ref: '#/components/schemas/Student'
     post:
       tags:
-      - students-controller
+        - students-controller
       operationId: create
       requestBody:
         content:
@@ -68,19 +68,19 @@ paths:
   /courses:
     get:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: getAll_1
       parameters:
-      - name: student
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: withoutAnyStudent
-        in: query
-        required: false
-        schema:
-          type: boolean
+        - name: student
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: withoutAnyStudent
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         "400":
           description: Bad Request
@@ -101,7 +101,7 @@ paths:
                   $ref: '#/components/schemas/Course'
     post:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: create_1
       requestBody:
         content:
@@ -127,14 +127,14 @@ paths:
   /courses/{uuid}/register:
     post:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: register
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -159,14 +159,14 @@ paths:
   /students/{uuid}:
     get:
       tags:
-      - students-controller
+        - students-controller
       operationId: getOne
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
@@ -184,14 +184,14 @@ paths:
                 $ref: '#/components/schemas/Student'
     delete:
       tags:
-      - students-controller
+        - students-controller
       operationId: delete
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
@@ -210,14 +210,14 @@ paths:
   /students/{uuid}/courses:
     get:
       tags:
-      - students-controller
+        - students-controller
       operationId: courses
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
@@ -239,14 +239,14 @@ paths:
   /courses/{uuid}:
     get:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: getOne_1
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
@@ -264,14 +264,14 @@ paths:
                 $ref: '#/components/schemas/Course'
     delete:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: delete_1
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
@@ -290,14 +290,14 @@ paths:
   /courses/{uuid}/students:
     get:
       tags:
-      - courses-controller
+        - courses-controller
       operationId: students
       parameters:
-      - name: uuid
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "400":
           description: Bad Request
