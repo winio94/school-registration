@@ -10,6 +10,7 @@ class Errors {
     static Supplier<ResponseStatusException> notFoundError(String uuid, Entity entity) {
         return () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                                                  String.format("%s with uuid = %s does not exists",
-                                                               entity.getType(), uuid));
+                                                               entity.getType(),
+                                                               uuid));
     }
 }

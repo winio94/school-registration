@@ -49,7 +49,8 @@ public class AppConfig {
 
     @Bean
     public StudentsAndCoursesRepository studentsAndCoursesRepository() {
-        return new StudentsAndCoursesRepositoryImpl(dbRegistrationRepository, dbStudentsRepository,
+        return new StudentsAndCoursesRepositoryImpl(dbRegistrationRepository,
+                                                    dbStudentsRepository,
                                                     dbCourseRepository);
     }
 
@@ -68,21 +69,22 @@ public class AppConfig {
                                                    StudentsRepository studentsRepository,
                                                    StudentsAndCoursesRepository studentsAndCoursesService,
                                                    Environment environment) {
-        int maxNumberOfStudentsPerCourse = Integer.parseInt(
-            environment.getProperty(Environments.MAX_NUMBER_OF_STUDENTS_PER_COURSE.name(), "50"));
-        int maxNumberOfCoursesPerStudent = Integer.parseInt(
-            environment.getProperty(Environments.MAX_NUMBER_OF_COURSES_PER_STUDENT.name(), "5"));
-        return new RegistrationServiceImpl(coursesRepository, studentsRepository,
-                                           studentsAndCoursesService, maxNumberOfStudentsPerCourse,
+        int maxNumberOfStudentsPerCourse = Integer.parseInt(environment.getProperty(Environments.MAX_NUMBER_OF_STUDENTS_PER_COURSE.name(),
+                                                                                    "50"));
+        int maxNumberOfCoursesPerStudent = Integer.parseInt(environment.getProperty(Environments.MAX_NUMBER_OF_COURSES_PER_STUDENT.name(),
+                                                                                    "5"));
+        return new RegistrationServiceImpl(coursesRepository,
+                                           studentsRepository,
+                                           studentsAndCoursesService,
+                                           maxNumberOfStudentsPerCourse,
                                            maxNumberOfCoursesPerStudent);
     }
 
     @Bean
-    public StudentsAndCoursesService studentsAndCoursesService(
-        StudentsAndCoursesRepository studentsAndCoursesRepository, StudentsService studentsService,
-        CoursesService coursesService) {
-        return new StudentsAndCoursesServiceImpl(studentsAndCoursesRepository, studentsService,
-                                                 coursesService);
+    public StudentsAndCoursesService studentsAndCoursesService(StudentsAndCoursesRepository studentsAndCoursesRepository,
+                                                               StudentsService studentsService,
+                                                               CoursesService coursesService) {
+        return new StudentsAndCoursesServiceImpl(studentsAndCoursesRepository, studentsService, coursesService);
     }
 
     @Bean

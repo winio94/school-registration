@@ -33,14 +33,16 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     public Student create(NewStudent newStudent) {
         log.info("Creating new student with first name = {} and last name = {}",
-                 newStudent.getFirstName(), newStudent.getLastName());
+                 newStudent.getFirstName(),
+                 newStudent.getLastName());
         return studentsRepository.create(newStudent);
     }
 
     @Override
     public void delete(String uuid) {
         log.info("Deleting student with uuid = {}", uuid);
-        studentsRepository.getOne(uuid).orElseThrow(Errors.notFoundError(uuid, Entity.STUDENT));
+        studentsRepository.getOne(uuid)
+                          .orElseThrow(Errors.notFoundError(uuid, Entity.STUDENT));
         studentsRepository.delete(uuid);
     }
 }

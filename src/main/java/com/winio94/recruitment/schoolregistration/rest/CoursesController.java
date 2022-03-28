@@ -32,7 +32,8 @@ public class CoursesController {
     private final RegistrationService registrationService;
     private final StudentsAndCoursesService studentsAndCoursesService;
 
-    CoursesController(CoursesService coursesService, RegistrationService registrationService,
+    CoursesController(CoursesService coursesService,
+                      RegistrationService registrationService,
                       StudentsAndCoursesService studentsAndCoursesService) {
         this.coursesService = coursesService;
         this.registrationService = registrationService;
@@ -40,9 +41,8 @@ public class CoursesController {
     }
 
     @GetMapping
-    public Set<Course> getAll(
-        @RequestParam(name = "student", required = false) @Uuid String studentUuid,
-        @RequestParam(required = false) boolean withoutAnyStudent) {
+    public Set<Course> getAll(@RequestParam(name = "student", required = false) @Uuid String studentUuid,
+                              @RequestParam(required = false) boolean withoutAnyStudent) {
         return studentsAndCoursesService.getAllCoursesFiltered(studentUuid, withoutAnyStudent);
     }
 
@@ -61,8 +61,9 @@ public class CoursesController {
     public ResponseEntity<Object> register(@PathVariable @Uuid String uuid,
                                            @Valid @RequestBody Registration registration) {
         RegistrationResult registrationResult = registrationService.register(uuid, registration);
-        return registrationResult.isSuccessful() ? ResponseEntity.ok().build()
-            : ResponseEntity.badRequest().build();
+        return registrationResult.isSuccessful() ? ResponseEntity.ok()
+                                                                 .build() : ResponseEntity.badRequest()
+                                                                                          .build();
     }
 
     @GetMapping("/{uuid}/students")
@@ -73,7 +74,8 @@ public class CoursesController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Object> delete(@PathVariable @Uuid String uuid) {
         coursesService.delete(uuid);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                             .build();
     }
 
 }

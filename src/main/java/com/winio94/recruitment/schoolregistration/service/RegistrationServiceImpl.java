@@ -30,10 +30,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationResult register(String courseUuid,
-                                       Registration registration) {
+    public RegistrationResult register(String courseUuid, Registration registration) {
         log.info("Registering student with uuid = {} for a course with uuid = {}",
-                 registration.getUuid(), courseUuid);
+                 registration.getUuid(),
+                 courseUuid);
         coursesRepository.getOne(courseUuid)
                          .orElseThrow(Errors.notFoundError(courseUuid, Entity.COURSE));
         studentsRepository.getOne(registration.getUuid())
@@ -44,8 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (isNumberOfCoursesExceeded(registration)) {
             return numberOfCoursesExceededError();
         }
-        studentsAndCoursesRepository.addStudentToTheCourse(courseUuid,
-                                                           registration.getUuid());
+        studentsAndCoursesRepository.addStudentToTheCourse(courseUuid, registration.getUuid());
         return RegistrationResult.SUCCESS;
     }
 

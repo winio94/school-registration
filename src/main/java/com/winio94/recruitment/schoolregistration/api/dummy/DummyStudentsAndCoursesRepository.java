@@ -33,7 +33,8 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
     public void addStudentToTheCourse(String courseUuid, String studentUuid) {
         Set<Student> students = Optional.ofNullable(studentsPerCourse.get(courseUuid))
                                         .orElse(new HashSet<>());
-        studentsRepository.getOne(studentUuid).ifPresent(students::add);
+        studentsRepository.getOne(studentUuid)
+                          .ifPresent(students::add);
         studentsPerCourse.put(courseUuid, students);
     }
 
@@ -49,7 +50,8 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
                                 .filter(isStudentAssignedToTheCourse(studentUuid))
                                 .map(Entry::getKey)
                                 .map(coursesRepository::getOne)
-                                .flatMap(c -> c.map(Stream::of).orElseGet(Stream::empty))
+                                .flatMap(c -> c.map(Stream::of)
+                                               .orElseGet(Stream::empty))
                                 .collect(Collectors.toSet());
 
     }
@@ -87,16 +89,17 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
         return Math.toIntExact(studentsPerCourse.values()
                                                 .stream()
                                                 .flatMap(Set::stream)
-                                                .filter(s -> s.getUuid().equals(studentUuid))
+                                                .filter(s -> s.getUuid()
+                                                              .equals(studentUuid))
                                                 .count());
     }
 
-    private Predicate<Entry<String, Set<Student>>> isStudentAssignedToTheCourse(
-        String studentUuid) {
+    private Predicate<Entry<String, Set<Student>>> isStudentAssignedToTheCourse(String studentUuid) {
         return (entry) -> {
             Set<Student> studentsAssignedToGivenCourse = entry.getValue();
             return studentsAssignedToGivenCourse.stream()
-                                                .anyMatch(s -> s.getUuid().equals(studentUuid));
+                                                .anyMatch(s -> s.getUuid()
+                                                                .equals(studentUuid));
         };
     }
 }

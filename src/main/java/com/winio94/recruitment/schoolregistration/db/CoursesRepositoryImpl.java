@@ -27,13 +27,16 @@ public class CoursesRepositoryImpl implements CoursesRepository {
 
     @Override
     public Optional<Course> getOne(String uuid) {
-        return dbCourseRepository.findByUuid(uuid).map(DbCourse::toDomainModel);
+        return dbCourseRepository.findByUuid(uuid)
+                                 .map(DbCourse::toDomainModel);
     }
 
     @Override
     public Course create(NewCourse newCourse) {
-        DbCourse dbCourse = dbCourseRepository.save(
-            new DbCourse(UUID.randomUUID().toString(), newCourse.getName(), newCourse.getCode()));
+        DbCourse dbCourse = dbCourseRepository.save(new DbCourse(UUID.randomUUID()
+                                                                     .toString(),
+                                                                 newCourse.getName(),
+                                                                 newCourse.getCode()));
         return dbCourse.toDomainModel();
     }
 

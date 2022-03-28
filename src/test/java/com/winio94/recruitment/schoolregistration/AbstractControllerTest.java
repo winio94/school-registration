@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
@@ -49,16 +50,18 @@ abstract class AbstractControllerTest {
 
     String getUuidFromResponse(ResultActions createEntityResponse)
         throws JsonProcessingException, UnsupportedEncodingException {
-        return String.valueOf(objectMapper.readTree(
-                         createEntityResponse.andReturn().getResponse().getContentAsString()).get("uuid"))
+        JsonNode jsonResponse = objectMapper.readTree(createEntityResponse.andReturn()
+                                                                          .getResponse()
+                                                                          .getContentAsString());
+        return String.valueOf(jsonResponse.get("uuid"))
                      .replaceAll("\"", "");
     }
 
     ResultActions createNewStudent(NewStudent newStudent) throws Exception {
         String requestBody = toJsonString(newStudent);
 
-        return mvc.perform(
-                      post("/students").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        return mvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON)
+                                            .content(requestBody))
                   .andExpect(status().isCreated())
                   .andExpect(content().json(requestBody, false))
                   .andExpect(jsonPath("$.uuid", Matchers.not(Matchers.empty())));
@@ -67,8 +70,8 @@ abstract class AbstractControllerTest {
     ResultActions createNewCourse(NewCourse newCourse) throws Exception {
         String requestBody = toJsonString(newCourse);
 
-        return mvc.perform(
-                      post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        return mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON)
+                                           .content(requestBody))
                   .andExpect(status().isCreated())
                   .andExpect(content().json(requestBody, false))
                   .andExpect(jsonPath("$.uuid", Matchers.not(Matchers.empty())));

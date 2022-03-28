@@ -32,15 +32,15 @@ public class CoursesServiceImpl implements CoursesService {
 
     @Override
     public Course create(NewCourse newCourse) {
-        log.info("Creating new course with name = {} and code = {}", newCourse.getName(),
-                 newCourse.getCode());
+        log.info("Creating new course with name = {} and code = {}", newCourse.getName(), newCourse.getCode());
         return coursesRepository.create(newCourse);
     }
 
     @Override
     public void delete(String uuid) {
         log.info("Deleting course with uuid = {}", uuid);
-        coursesRepository.getOne(uuid).orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
+        coursesRepository.getOne(uuid)
+                         .orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
         coursesRepository.delete(uuid);
     }
 }

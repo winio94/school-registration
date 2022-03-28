@@ -11,23 +11,22 @@ import org.skyscreamer.jsonassert.comparator.CustomComparator;
 
 public class TestUtils {
 
-    static final CustomComparator anyUuidComparator = new CustomComparator(
-        JSONCompareMode.NON_EXTENSIBLE,
-        new Customization("*.uuid", JsonAssertComparators.NON_NULL_VALUE_MATCHER));
+    static final CustomComparator anyUuidComparator = new CustomComparator(JSONCompareMode.NON_EXTENSIBLE,
+                                                                           new Customization("*.uuid",
+                                                                                             JsonAssertComparators.NON_NULL_VALUE_MATCHER));
 
     static Path getResourceFilePath(String relativeResourcePath) {
         try {
-            return Paths.get(ClassLoader.getSystemResource(relativeResourcePath).toURI());
+            return Paths.get(ClassLoader.getSystemResource(relativeResourcePath)
+                                        .toURI());
         } catch (URISyntaxException e) {
-            throw new RuntimeException(
-                String.format("Could not find file %s.", relativeResourcePath));
+            throw new RuntimeException(String.format("Could not find file %s.", relativeResourcePath));
         }
     }
 
     static String readFileAsString(String filePath) {
         try {
-            return new String(Files.readAllBytes(getResourceFilePath(filePath)),
-                              StandardCharsets.UTF_8);
+            return new String(Files.readAllBytes(getResourceFilePath(filePath)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new RuntimeException(String.format("Could not find file %s.", filePath));
         }

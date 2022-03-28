@@ -56,9 +56,9 @@ public class CoursesControllerTest extends AbstractControllerTest {
 
     @ParameterizedTest
     @MethodSource("byUuidMethods")
-    public void shouldReturnNotFoundErrorIfCourseDoesNotExist(RequestBuilder requestBuilder)
-        throws Exception {
-        mvc.perform(requestBuilder).andExpect(status().isNotFound());
+    public void shouldReturnNotFoundErrorIfCourseDoesNotExist(RequestBuilder requestBuilder) throws Exception {
+        mvc.perform(requestBuilder)
+           .andExpect(status().isNotFound());
     }
 
     @Test
@@ -71,7 +71,8 @@ public class CoursesControllerTest extends AbstractControllerTest {
         ResultActions createCourseResponse = createNewCourse(new NewCourse("PT", "003"));
         String uuid = getUuidFromResponse(createCourseResponse);
 
-        mvc.perform(delete("/courses/{uuid}", uuid)).andExpect(status().isNoContent());
+        mvc.perform(delete("/courses/{uuid}", uuid))
+           .andExpect(status().isNoContent());
     }
 
     @Test
@@ -84,20 +85,18 @@ public class CoursesControllerTest extends AbstractControllerTest {
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
         String registrationRequestBody = toJsonString(new Registration(studentUuid));
 
-        mvc.perform(
-               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
-                                                           .content(registrationRequestBody))
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(registrationRequestBody))
            .andExpect(status().isOk());
 
         mvc.perform(get("/courses/{uuid}/students", courseUuid))
            .andExpect(status().isOk())
-           .andExpect(content().json(
-               toJsonString(Collections.singletonList(Student.from(newStudent, studentUuid)))));
+           .andExpect(content().json(toJsonString(Collections.singletonList(Student.from(newStudent,
+                                                                                         studentUuid)))));
 
         mvc.perform(get("/students/{uuid}/courses", studentUuid))
            .andExpect(status().isOk())
-           .andExpect(content().json(
-               toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
+           .andExpect(content().json(toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
     }
 
     @Test
@@ -105,26 +104,23 @@ public class CoursesControllerTest extends AbstractControllerTest {
         NewCourse courseWithoutAnyStudent = new NewCourse("Maths", "004");
         NewStudent newStudent = new NewStudent("Tom", "Cruise");
         NewCourse newCourse = new NewCourse("PT", "003");
-        String courseWithoutAnyStudentUuid = getUuidFromResponse(
-            createNewCourse(courseWithoutAnyStudent));
+        String courseWithoutAnyStudentUuid = getUuidFromResponse(createNewCourse(courseWithoutAnyStudent));
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
         String registrationRequestBody = toJsonString(new Registration(studentUuid));
 
-        mvc.perform(
-               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
-                                                           .content(registrationRequestBody))
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(registrationRequestBody))
            .andExpect(status().isOk());
 
         mvc.perform(get("/courses").param("student", studentUuid))
            .andExpect(status().isOk())
-           .andExpect(content().json(
-               toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
+           .andExpect(content().json(toJsonString(Collections.singletonList(Course.from(newCourse, courseUuid)))));
 
         mvc.perform(get("/courses").param("withoutAnyStudent", "true"))
            .andExpect(status().isOk())
-           .andExpect(content().json(toJsonString(Collections.singletonList(
-               Course.from(courseWithoutAnyStudent, courseWithoutAnyStudentUuid)))));
+           .andExpect(content().json(toJsonString(Collections.singletonList(Course.from(courseWithoutAnyStudent,
+                                                                                        courseWithoutAnyStudentUuid)))));
     }
 
     @ParameterizedTest
@@ -134,64 +130,74 @@ public class CoursesControllerTest extends AbstractControllerTest {
         throws Exception {
         String requestBody = toJsonString(newCourse);
 
-        mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON).content(requestBody))
+        mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON)
+                                    .content(requestBody))
            .andExpect(status().isBadRequest())
            .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
     }
 
     @ParameterizedTest
     @MethodSource("withInvalidUuidParam")
-    public void shouldReturnBadRequestErrorWhenUuidParamHasInvalidFormat(
-        RequestBuilder requestBuilder, String paramName) throws Exception {
+    public void shouldReturnBadRequestErrorWhenUuidParamHasInvalidFormat(RequestBuilder requestBuilder,
+                                                                         String paramName) throws Exception {
 
         mvc.perform(requestBuilder)
            .andExpect(status().isBadRequest())
-           .andExpect(content().json(
-               TestUtils.readFileAsString("response/error/invalidUuidParam.json")
-                        .replaceAll("<PARAM_NAME>", paramName), true));
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/invalidUuidParam.json")
+                                              .replaceAll("<PARAM_NAME>", paramName), true));
     }
 
     public static Stream<Arguments> invalidCourses() {
-        return Stream.of(
-            Arguments.of(new NewCourse(null, null), "response/error/missingNameAndCode.json"),
-            Arguments.of(new NewCourse("Maths", null), "response/error/missingCode.json"),
-            Arguments.of(new NewCourse(null, "101"), "response/error/missingName.json"),
-            Arguments.of(new NewCourse("emptyCode", ""), "response/error/missingCode.json"),
-            Arguments.of(new NewCourse("", "emptyName"), "response/error/missingName.json"),
-            Arguments.of(new NewCourse("tooLongCode", StringUtils.repeat("a", 101)),
-                         "response/error/tooLongCode.json"),
-            Arguments.of(new NewCourse(StringUtils.repeat("a", 101), "some code"),
-                         "response/error/tooLongName.json"));
+        return Stream.of(Arguments.of(new NewCourse(null, null), "response/error/missingNameAndCode.json"),
+                         Arguments.of(new NewCourse("Maths", null), "response/error/missingCode.json"),
+                         Arguments.of(new NewCourse(null, "101"), "response/error/missingName.json"),
+                         Arguments.of(new NewCourse("emptyCode", ""), "response/error/missingCode.json"),
+                         Arguments.of(new NewCourse("", "emptyName"), "response/error/missingName.json"),
+                         Arguments.of(new NewCourse("tooLongCode", StringUtils.repeat("a", 101)),
+                                      "response/error/tooLongCode.json"),
+                         Arguments.of(new NewCourse(StringUtils.repeat("a", 101), "some code"),
+                                      "response/error/tooLongName.json"));
     }
 
     public static Stream<Arguments> byUuidMethods() {
-        return Stream.of(Arguments.of(get("/courses/{uuid}", UUID.randomUUID().toString())),
-                         Arguments.of(delete("/courses/{uuid}", UUID.randomUUID().toString())));
+        return Stream.of(Arguments.of(get("/courses/{uuid}",
+                                          UUID.randomUUID()
+                                              .toString())),
+                         Arguments.of(delete("/courses/{uuid}",
+                                             UUID.randomUUID()
+                                                 .toString())));
     }
 
     public static Stream<Arguments> withInvalidUuidParam() throws JsonProcessingException {
         String invalidUuid = "invalidUuid";
-        String registrationRequest = new ObjectMapper().writeValueAsString(
-            new Registration(UUID.randomUUID().toString()));
+        String registrationRequest = new ObjectMapper().writeValueAsString(new Registration(UUID.randomUUID()
+                                                                                                .toString()));
 
-        Stream<Arguments> invalidPathParams = Stream.of(
-            Arguments.of(get("/courses/{uuid}", invalidUuid), "uuid"),
-            Arguments.of(get("/courses/{uuid}/students", invalidUuid), "uuid"),
-            Arguments.of(delete("/courses/{uuid}", invalidUuid), "uuid"), Arguments.of(
-                post("/courses/{uuid}/register", invalidUuid).contentType(
-                    MediaType.APPLICATION_JSON).content(registrationRequest), "uuid"));
+        Stream<Arguments> invalidPathParams = Stream.of(Arguments.of(get("/courses/{uuid}", invalidUuid), "uuid"),
+                                                        Arguments.of(get("/courses/{uuid}/students", invalidUuid),
+                                                                     "uuid"),
+                                                        Arguments.of(delete("/courses/{uuid}", invalidUuid),
+                                                                     "uuid"),
+                                                        Arguments.of(post("/courses/{uuid}/register",
+                                                                          invalidUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                                      .content(registrationRequest),
+                                                                     "uuid"));
 
-        Stream<Arguments> invalidQueryParams = Stream.of(
-            Arguments.of(get("/courses").param("student", invalidUuid), "studentUuid"));
+        Stream<Arguments> invalidQueryParams = Stream.of(Arguments.of(get("/courses").param("student",
+                                                                                            invalidUuid),
+                                                                      "studentUuid"));
 
         registrationRequest = new ObjectMapper().writeValueAsString(new Registration(invalidUuid));
 
-        Stream<Arguments> invalidRequestBodyParams = Stream.of(Arguments.of(
-            post("/courses/{uuid}/register", UUID.randomUUID().toString()).contentType(
-                MediaType.APPLICATION_JSON).content(registrationRequest), "studentUuid"));
+        Stream<Arguments> invalidRequestBodyParams = Stream.of(Arguments.of(post("/courses/{uuid}/register",
+                                                                                 UUID.randomUUID()
+                                                                                     .toString()).contentType(
+                                                                                                     MediaType.APPLICATION_JSON)
+                                                                                                 .content(
+                                                                                                     registrationRequest),
+                                                                            "studentUuid"));
 
-        return Stream.concat(Stream.concat(invalidPathParams, invalidQueryParams),
-                             invalidRequestBodyParams);
+        return Stream.concat(Stream.concat(invalidPathParams, invalidQueryParams), invalidRequestBodyParams);
     }
 }
 

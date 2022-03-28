@@ -28,18 +28,15 @@ public class StudentsController {
     private final StudentsService studentsService;
     private final StudentsAndCoursesService studentsAndCoursesService;
 
-    StudentsController(StudentsService studentsService,
-                       StudentsAndCoursesService studentsAndCoursesService) {
+    StudentsController(StudentsService studentsService, StudentsAndCoursesService studentsAndCoursesService) {
         this.studentsService = studentsService;
         this.studentsAndCoursesService = studentsAndCoursesService;
     }
 
     @GetMapping
-    public Set<Student> getAll(
-        @RequestParam(name = "course", required = false) @Uuid String courseUuid,
-        @RequestParam(required = false) boolean notRegisteredToAnyCourse) {
-        return studentsAndCoursesService.getAllStudentsFiltered(courseUuid,
-                                                                notRegisteredToAnyCourse);
+    public Set<Student> getAll(@RequestParam(name = "course", required = false) @Uuid String courseUuid,
+                               @RequestParam(required = false) boolean notRegisteredToAnyCourse) {
+        return studentsAndCoursesService.getAllStudentsFiltered(courseUuid, notRegisteredToAnyCourse);
     }
 
     @GetMapping("/{uuid}")
@@ -61,7 +58,8 @@ public class StudentsController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<Object> delete(@PathVariable @Uuid String uuid) {
         studentsService.delete(uuid);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                             .build();
     }
 
 }

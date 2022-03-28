@@ -30,7 +30,8 @@ public class DummyCoursesRepository implements CoursesRepository {
 
     @Override
     public Course create(NewCourse newCourse) {
-        String uuid = UUID.randomUUID().toString();
+        String uuid = UUID.randomUUID()
+                          .toString();
         Course course = Course.from(newCourse, uuid);
         dummyCourses.put(uuid, course);
         return course;

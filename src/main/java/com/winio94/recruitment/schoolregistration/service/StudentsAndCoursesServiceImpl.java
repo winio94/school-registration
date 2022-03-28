@@ -26,16 +26,14 @@ public class StudentsAndCoursesServiceImpl implements StudentsAndCoursesService 
     }
 
     @Override
-    public Set<Student> getAllStudentsFiltered(String courseUuid,
-                                               boolean notRegisteredToAnyCourse) {
+    public Set<Student> getAllStudentsFiltered(String courseUuid, boolean notRegisteredToAnyCourse) {
         if (Objects.nonNull(courseUuid) && notRegisteredToAnyCourse) {
             //todo test this
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                                               "Unable to fetch students that match given criteria. "
                                                   + "Please remove one of provided filtering conditions");
         } else if (Objects.nonNull(courseUuid)) {
-            log.info("Fetching students that are registered for a course with uuid = {}",
-                     courseUuid);
+            log.info("Fetching students that are registered for a course with uuid = {}", courseUuid);
             return studentsAndCoursesRepository.getAllStudentsForCourse(courseUuid);
         } else if (notRegisteredToAnyCourse) {
             log.info("Fetching courses that are not assigned to any student");
@@ -53,8 +51,7 @@ public class StudentsAndCoursesServiceImpl implements StudentsAndCoursesService 
                                               "Unable to fetch courses that match given criteria. "
                                                   + "Please remove one of provided filtering conditions");
         } else if (Objects.nonNull(studentUuid)) {
-            log.info("Fetching courses that are assigned to the student with uuid = {}",
-                     studentUuid);
+            log.info("Fetching courses that are assigned to the student with uuid = {}", studentUuid);
             return studentsAndCoursesRepository.getAllCoursesForStudent(studentUuid);
         } else if (withoutAnyStudent) {
             log.info("Fetching courses that are not assigned to any student");

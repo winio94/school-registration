@@ -20,11 +20,13 @@ class RestErrorHandlingControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
+        ex.getBindingResult()
+          .getAllErrors()
+          .forEach((error) -> {
+              String fieldName = ((FieldError) error).getField();
+              String errorMessage = error.getDefaultMessage();
+              errors.put(fieldName, errorMessage);
+          });
         return errors;
     }
 
@@ -32,12 +34,13 @@ class RestErrorHandlingControllerAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     Map<String, String> handleValidationExceptions(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach((error) -> {
-            String fieldName = StringUtils.substringAfterLast(error.getPropertyPath().toString(),
-                                                              ".");
-            String errorMessage = error.getMessage();
-            errors.put(fieldName, errorMessage);
-        });
+        ex.getConstraintViolations()
+          .forEach((error) -> {
+              String fieldName = StringUtils.substringAfterLast(error.getPropertyPath()
+                                                                     .toString(), ".");
+              String errorMessage = error.getMessage();
+              errors.put(fieldName, errorMessage);
+          });
         return errors;
     }
 }

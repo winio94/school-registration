@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = {"MAX_NUMBER_OF_STUDENTS_PER_COURSE=1",
-    "MAX_NUMBER_OF_COURSES_PER_STUDENT=1"})
+@TestPropertySource(properties = {"MAX_NUMBER_OF_STUDENTS_PER_COURSE=1", "MAX_NUMBER_OF_COURSES_PER_STUDENT=1"})
 public class RegistrationErrorTest extends AbstractControllerTest {
 
     @Test
@@ -23,16 +22,12 @@ public class RegistrationErrorTest extends AbstractControllerTest {
         String student1Uuid = getUuidFromResponse(createNewStudent(student1));
         String student2Uuid = getUuidFromResponse(createNewStudent(student2));
 
-        mvc.perform(
-               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
-                                                           .content(toJsonString(
-                                                               new Registration(student1Uuid))))
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(toJsonString(new Registration(student1Uuid))))
            .andExpect(status().isOk());
 
-        mvc.perform(
-               post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
-                                                           .content(toJsonString(
-                                                               new Registration(student2Uuid))))
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(toJsonString(new Registration(student2Uuid))))
            .andExpect(status().isBadRequest());
 
     }
@@ -46,16 +41,12 @@ public class RegistrationErrorTest extends AbstractControllerTest {
         String course2Uuid = getUuidFromResponse(createNewCourse(course2));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
 
-        mvc.perform(
-               post("/courses/{uuid}/register", course1Uuid).contentType(MediaType.APPLICATION_JSON)
-                                                            .content(toJsonString(
-                                                                new Registration(studentUuid))))
+        mvc.perform(post("/courses/{uuid}/register", course1Uuid).contentType(MediaType.APPLICATION_JSON)
+                                                                 .content(toJsonString(new Registration(studentUuid))))
            .andExpect(status().isOk());
 
-        mvc.perform(
-               post("/courses/{uuid}/register", course2Uuid).contentType(MediaType.APPLICATION_JSON)
-                                                            .content(toJsonString(
-                                                                new Registration(studentUuid))))
+        mvc.perform(post("/courses/{uuid}/register", course2Uuid).contentType(MediaType.APPLICATION_JSON)
+                                                                 .content(toJsonString(new Registration(studentUuid))))
            .andExpect(status().isBadRequest());
 
     }
