@@ -80,8 +80,6 @@ All existing REST APIs can be executed through Postman REST API client
 
 TODO tasks
 
-* request validation
-    * uuid (path variables/query params/registration request) schema validation - 36 characters
 * validation of uniqueness
     * unique student (probably would require some additional property, like e.g. Personal ID Number)
     * unique course (unique code)

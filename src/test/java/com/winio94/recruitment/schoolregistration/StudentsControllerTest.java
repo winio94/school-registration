@@ -143,8 +143,8 @@ public class StudentsControllerTest extends AbstractControllerTest {
     }
 
     public static Stream<Arguments> byUuidMethods() {
-        return Stream.of(Arguments.of(get("/students/{uuid}", "suchStudentDoesNotExist")),
-                         Arguments.of(delete("/students/{uuid}", "suchStudentDoesNotExist")));
+        return Stream.of(Arguments.of(get("/students/{uuid}", UUID.randomUUID().toString())),
+                         Arguments.of(delete("/students/{uuid}", UUID.randomUUID().toString())));
     }
 
     public static Stream<Arguments> withInvalidUuidParam() {
