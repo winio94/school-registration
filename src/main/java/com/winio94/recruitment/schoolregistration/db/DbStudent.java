@@ -15,13 +15,17 @@ public class DbStudent extends DbEntity {
     @Column(name = "LAST_NAME")
     private String lastName;
 
+    @Column(name = "PERSONAL_ID", unique = true)
+    private String personalId;
+
     public DbStudent() {
     }
 
-    public DbStudent(String uuid, String firstName, String lastName) {
+    public DbStudent(String uuid, String firstName, String lastName, String personalId) {
         super(uuid);
         this.firstName = firstName;
         this.lastName = lastName;
+        this.personalId = personalId;
     }
 
     public String getFirstName() {
@@ -33,6 +37,6 @@ public class DbStudent extends DbEntity {
     }
 
     public Student toDomainModel() {
-        return new Student(this.uuid, this.firstName, this.lastName);
+        return new Student(this.uuid, this.firstName, this.lastName, this.personalId);
     }
 }
