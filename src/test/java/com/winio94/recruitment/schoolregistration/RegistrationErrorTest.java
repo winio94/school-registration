@@ -1,5 +1,6 @@
 package com.winio94.recruitment.schoolregistration;
 
+import static com.winio94.recruitment.schoolregistration.TestUtils.randomPersonalId;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,8 +16,8 @@ public class RegistrationErrorTest extends AbstractControllerTest {
 
     @Test
     void shouldReturnErrorWhenNumberOfStudentsExceededForGivenCourse() throws Exception {
-        NewStudent student1 = new NewStudent("Tom", "Cruise");
-        NewStudent student2 = new NewStudent("Monica", "Bellucci");
+        NewStudent student1 = new NewStudent("Tom", "Cruise", randomPersonalId());
+        NewStudent student2 = new NewStudent("Monica", "Bellucci", randomPersonalId());
         NewCourse newCourse = new NewCourse("PT", "003");
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String student1Uuid = getUuidFromResponse(createNewStudent(student1));
@@ -34,7 +35,7 @@ public class RegistrationErrorTest extends AbstractControllerTest {
 
     @Test
     void shouldReturnErrorWhenNumberOfCoursesExceededForGivenStudent() throws Exception {
-        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
         NewCourse course1 = new NewCourse("PT", "003");
         NewCourse course2 = new NewCourse("Maths", "004");
         String course1Uuid = getUuidFromResponse(createNewCourse(course1));

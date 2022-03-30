@@ -4,6 +4,8 @@ import com.winio94.recruitment.schoolregistration.api.Entity;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
+import io.vavr.control.Either;
+import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,15 @@ public class StudentsServiceImpl implements StudentsService {
     }
 
     @Override
-    public Student create(NewStudent newStudent) {
+    public Either<StudentError, Student> create(NewStudent newStudent) {
         log.info("Creating new student with first name = {} and last name = {}",
                  newStudent.getFirstName(),
                  newStudent.getLastName());
-        return studentsRepository.create(newStudent);
+        Optional<Student> student = studentsRepository.findByPersonalId(newStudent.getPersonalId());
+        if (student.isPresent()) {
+            return Either.left(StudentError.PERSONAL_ID_ALREADY_USED);
+        }
+        return Either.right(studentsRepository.create(newStudent));
     }
 
     @Override

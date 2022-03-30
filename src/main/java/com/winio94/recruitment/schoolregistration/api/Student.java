@@ -2,32 +2,21 @@ package com.winio94.recruitment.schoolregistration.api;
 
 import java.util.Objects;
 
-public class Student implements WithUuid {
+public class Student extends NewStudent implements WithUuid {
 
     private final String uuid;
-    private final String firstName;
-    private final String lastName;
 
-    public Student(String uuid, String firstName, String lastName) {
+    public Student(String uuid, String firstName, String lastName, String personalId) {
+        super(firstName, lastName, personalId);
         this.uuid = uuid;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public static Student from(NewStudent newStudent, String uuid) {
-        return new Student(uuid, newStudent.getFirstName(), newStudent.getLastName());
+        return new Student(uuid, newStudent.getFirstName(), newStudent.getLastName(), newStudent.getPersonalId());
     }
 
     public String getUuid() {
         return uuid;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     @Override

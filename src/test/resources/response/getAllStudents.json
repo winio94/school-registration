@@ -2,11 +2,13 @@
   {
     "uuid": "<GENERATED>",
     "firstName": "John",
-    "lastName": "Doe"
+    "lastName": "Doe",
+    "personalId": "111"
   },
   {
     "uuid": "<GENERATED>",
     "firstName": "Karen",
-    "lastName": "Simson"
+    "lastName": "Simson",
+    "personalId": "222"
   }
 ]

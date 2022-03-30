@@ -10,6 +10,8 @@ public interface DbStudentsRepository extends JpaRepository<DbStudent, Long> {
 
     Optional<DbStudent> findByUuid(String uuid);
 
+    Optional<DbStudent> findByPersonalId(String personalId);
+
     @Query("SELECT s FROM DbStudent s LEFT JOIN DbRegistration r ON s.uuid = r.studentUuid WHERE r.courseUuid = :courseUuid")
     List<DbStudent> findAllByCourse(@Param("courseUuid") String courseUuid);
 

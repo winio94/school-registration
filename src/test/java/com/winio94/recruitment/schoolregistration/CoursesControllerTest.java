@@ -1,5 +1,6 @@
 package com.winio94.recruitment.schoolregistration;
 
+import static com.winio94.recruitment.schoolregistration.TestUtils.randomPersonalId;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -78,8 +79,8 @@ public class CoursesControllerTest extends AbstractControllerTest {
     @Test
     public void shouldRegisterStudentToCourse() throws Exception {
         createNewCourse(new NewCourse("Maths", "004"));
-        createNewStudent(new NewStudent("John", "Doe"));
-        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        createNewStudent(new NewStudent("John", "Doe", randomPersonalId()));
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
         NewCourse newCourse = new NewCourse("PT", "003");
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
         String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
@@ -102,7 +103,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
     @Test
     public void shouldFilterCourses() throws Exception {
         NewCourse courseWithoutAnyStudent = new NewCourse("Maths", "004");
-        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
         NewCourse newCourse = new NewCourse("PT", "003");
         String courseWithoutAnyStudentUuid = getUuidFromResponse(createNewCourse(courseWithoutAnyStudent));
         String courseUuid = getUuidFromResponse(createNewCourse(newCourse));

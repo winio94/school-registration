@@ -1,6 +1,7 @@
 package com.winio94.recruitment.schoolregistration;
 
 import static com.winio94.recruitment.schoolregistration.TestUtils.anyUuidComparator;
+import static com.winio94.recruitment.schoolregistration.TestUtils.randomPersonalId;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,8 +29,8 @@ public class StudentsControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnListOfStudents() throws Exception {
-        createNewStudent(new NewStudent("John", "Doe"));
-        createNewStudent(new NewStudent("Karen", "Simson"));
+        createNewStudent(new NewStudent("John", "Doe", "111"));
+        createNewStudent(new NewStudent("Karen", "Simson", "222"));
         String expectedResponse = TestUtils.readFileAsString("response/getAllStudents.json");
 
         String response = mvc.perform(get("/students"))
@@ -43,7 +44,7 @@ public class StudentsControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnStudentByUuid() throws Exception {
-        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
         ResultActions createStudentResponse = createNewStudent(newStudent);
         String uuid = getUuidFromResponse(createStudentResponse);
 
@@ -61,12 +62,26 @@ public class StudentsControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldCreateNewStudent() throws Exception {
-        createNewStudent(new NewStudent("Monica", "Bellucci"));
+        createNewStudent(new NewStudent("Monica", "Bellucci", randomPersonalId()));
+    }
+
+    @Test
+    public void shouldNotAllowToCreateNewStudentWithSamePersonalId() throws Exception {
+        String personalId = randomPersonalId();
+        createNewStudent(new NewStudent("Monica", "Bellucci", personalId));
+
+        String secondStudent = toJsonString(new NewStudent("Johny", "Depp", personalId));
+        mvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON)
+                                     .content(secondStudent))
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/duplicatePersonalId.json")));
     }
 
     @Test
     public void shouldDeleteExistingStudent() throws Exception {
-        ResultActions createStudentResponse = createNewStudent(new NewStudent("Tom", "Cruise"));
+        ResultActions createStudentResponse = createNewStudent(new NewStudent("Tom",
+                                                                              "Cruise",
+                                                                              randomPersonalId()));
         String uuid = getUuidFromResponse(createStudentResponse);
 
         mvc.perform(delete("/students/{uuid}", uuid))
@@ -75,8 +90,8 @@ public class StudentsControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldFilterStudents() throws Exception {
-        NewStudent studentNotRegisteredToAnyCourse = new NewStudent("John", "Doe");
-        NewStudent newStudent = new NewStudent("Tom", "Cruise");
+        NewStudent studentNotRegisteredToAnyCourse = new NewStudent("John", "Doe", randomPersonalId());
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
         NewCourse newCourse = new NewCourse("PT", "003");
         String studentNotRegisteredToAnyCourseUuid = getUuidFromResponse(createNewStudent(
             studentNotRegisteredToAnyCourse));
@@ -123,17 +138,22 @@ public class StudentsControllerTest extends AbstractControllerTest {
     }
 
     public static Stream<Arguments> invalidStudents() {
-        return Stream.of(Arguments.of(new NewStudent(null, null),
+        return Stream.of(Arguments.of(new NewStudent(null, null, randomPersonalId()),
                                       "response/error/missingFirstNameAndLastName.json"),
-                         Arguments.of(new NewStudent("Monica", null), "response/error/missingLastName.json"),
-                         Arguments.of(new NewStudent(null, "Bellucci"), "response/error/missingFirstName.json"),
-                         Arguments.of(new NewStudent("emptyLastName", ""), "response/error/missingLastName.json"),
-                         Arguments.of(new NewStudent("", "emptyFirstName"),
+                         Arguments.of(new NewStudent("Monica", null, randomPersonalId()),
+                                      "response/error/missingLastName.json"),
+                         Arguments.of(new NewStudent(null, "Bellucci", randomPersonalId()),
                                       "response/error/missingFirstName.json"),
-                         Arguments.of(new NewStudent("tooLongLastName", StringUtils.repeat("a", 101)),
-                                      "response/error/tooLongLastName.json"),
-                         Arguments.of(new NewStudent(StringUtils.repeat("a", 101), "tooLongFirstName"),
-                                      "response/error/tooLongFirstName.json"));
+                         Arguments.of(new NewStudent("emptyLastName", "", randomPersonalId()),
+                                      "response/error/missingLastName.json"),
+                         Arguments.of(new NewStudent("", "emptyFirstName", randomPersonalId()),
+                                      "response/error/missingFirstName.json"),
+                         Arguments.of(new NewStudent("tooLongLastName",
+                                                     StringUtils.repeat("a", 101),
+                                                     randomPersonalId()), "response/error/tooLongLastName.json"),
+                         Arguments.of(new NewStudent(StringUtils.repeat("a", 101),
+                                                     "tooLongFirstName",
+                                                     randomPersonalId()), "response/error/tooLongFirstName.json"));
     }
 
     public static Stream<Arguments> byUuidMethods() {

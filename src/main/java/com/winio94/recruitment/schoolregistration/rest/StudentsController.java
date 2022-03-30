@@ -50,9 +50,10 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> create(@RequestBody @Valid NewStudent studentDto) {
-        Student newStudent = studentsService.create(studentDto);
-        return new ResponseEntity<>(newStudent, HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestBody @Valid NewStudent studentDto) {
+        return studentsService.create(studentDto)
+                              .fold(error -> new ResponseEntity<>(error.errorDetails(), HttpStatus.BAD_REQUEST),
+                                    newStudent -> new ResponseEntity<>(newStudent, HttpStatus.CREATED));
     }
 
     @DeleteMapping("/{uuid}")

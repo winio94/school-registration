@@ -81,7 +81,6 @@ All existing REST APIs can be executed through Postman REST API client
 TODO tasks
 
 * validation of uniqueness
-    * unique student (probably would require some additional property, like e.g. Personal ID Number)
     * unique course (unique code)
     * unique registration for given student and course
 * API for removing registration for a given student (currently there is no such API, and once

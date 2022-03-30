@@ -32,11 +32,18 @@ public class StudentsRepositoryImpl implements StudentsRepository {
     }
 
     @Override
+    public Optional<Student> findByPersonalId(String personalId) {
+        return dbStudentsRepository.findByPersonalId(personalId)
+                                   .map(DbStudent::toDomainModel);
+    }
+
+    @Override
     public Student create(NewStudent newStudent) {
         DbStudent dbStudent = dbStudentsRepository.save(new DbStudent(UUID.randomUUID()
                                                                           .toString(),
                                                                       newStudent.getFirstName(),
-                                                                      newStudent.getLastName()));
+                                                                      newStudent.getLastName(),
+                                                                      newStudent.getPersonalId()));
         return dbStudent.toDomainModel();
     }
 

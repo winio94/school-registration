@@ -31,4 +31,9 @@ public class TestUtils {
             throw new RuntimeException(String.format("Could not find file %s.", filePath));
         }
     }
+
+    static String randomPersonalId() {
+        return String.valueOf(Math.floor(Math.random() * 9_000_000L) + 1_000_000L);
+    }
+
 }

@@ -29,6 +29,15 @@ public class DummyStudentsRepository implements StudentsRepository {
     }
 
     @Override
+    public Optional<Student> findByPersonalId(String personalId) {
+        return dummyStudents.values()
+                            .stream()
+                            .filter(student -> student.getPersonalId()
+                                                      .equals(personalId))
+                            .findFirst();
+    }
+
+    @Override
     public Student create(NewStudent newStudent) {
         String uuid = UUID.randomUUID()
                           .toString();
