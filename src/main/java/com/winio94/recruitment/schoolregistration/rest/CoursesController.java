@@ -48,13 +48,14 @@ public class CoursesController {
 
     @GetMapping("/{uuid}")
     public Course getOne(@PathVariable @Uuid String uuid) {
-        return coursesService.getOne(uuid);
+        return coursesService.getOneByUuid(uuid);
     }
 
     @PostMapping
-    public ResponseEntity<Course> create(@RequestBody @Valid NewCourse newCourse) {
-        Course course = coursesService.create(newCourse);
-        return new ResponseEntity<>(course, HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestBody @Valid NewCourse newCourse) {
+        return coursesService.create(newCourse)
+                             .fold(error -> new ResponseEntity<>(error.errorDetails(), HttpStatus.BAD_REQUEST),
+                                   course -> new ResponseEntity<>(course, HttpStatus.CREATED));
     }
 
     @PostMapping("/{uuid}/register")

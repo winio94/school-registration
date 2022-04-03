@@ -7,7 +7,9 @@ public interface CoursesRepository {
 
     Set<Course> getAll();
 
-    Optional<Course> getOne(String uuid);
+    Optional<Course> getOneByUuid(String uuid);
+
+    Optional<Course> getOneByCode(String code);
 
     Course create(NewCourse newCourse);
 

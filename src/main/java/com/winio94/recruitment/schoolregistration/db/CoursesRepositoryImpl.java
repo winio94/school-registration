@@ -26,8 +26,14 @@ public class CoursesRepositoryImpl implements CoursesRepository {
     }
 
     @Override
-    public Optional<Course> getOne(String uuid) {
+    public Optional<Course> getOneByUuid(String uuid) {
         return dbCourseRepository.findByUuid(uuid)
+                                 .map(DbCourse::toDomainModel);
+    }
+
+    @Override
+    public Optional<Course> getOneByCode(String code) {
+        return dbCourseRepository.findByCode(code)
                                  .map(DbCourse::toDomainModel);
     }
 

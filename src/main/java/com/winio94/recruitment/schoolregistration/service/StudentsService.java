@@ -11,7 +11,7 @@ public interface StudentsService {
 
     Student getOne(String uuid);
 
-    Either<StudentError, Student> create(NewStudent newStudent);
+    Either<SchoolError, Student> create(NewStudent newStudent);
 
     void delete(String uuid);
 }

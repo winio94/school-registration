@@ -10,6 +10,8 @@ public interface DbCourseRepository extends JpaRepository<DbCourse, Long> {
 
     Optional<DbCourse> findByUuid(String uuid);
 
+    Optional<DbCourse> findByCode(String code);
+
     void deleteByUuid(String uuid);
 
     @Query("SELECT c FROM DbCourse c LEFT JOIN DbRegistration r ON c.uuid = r.courseUuid WHERE r.studentUuid = :studentUuid")

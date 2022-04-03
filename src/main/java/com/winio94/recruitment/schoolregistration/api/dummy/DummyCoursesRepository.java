@@ -24,8 +24,16 @@ public class DummyCoursesRepository implements CoursesRepository {
     }
 
     @Override
-    public Optional<Course> getOne(String uuid) {
+    public Optional<Course> getOneByUuid(String uuid) {
         return Optional.ofNullable(dummyCourses.get(uuid));
+    }
+
+    @Override
+    public Optional<Course> getOneByCode(String code) {
+        return dummyCourses.values()
+                           .stream()
+                           .filter(course -> code.equals(course.getCode()))
+                           .findFirst();
     }
 
     @Override

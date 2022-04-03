@@ -68,6 +68,17 @@ public class CoursesControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void shouldNotAllowToCreateNewCourseWithSameCode() throws Exception {
+        createNewCourse(new NewCourse("PT", "003"));
+
+        String secondCourse = toJsonString(new NewCourse("Maths", "003"));
+        mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON)
+                                    .content(secondCourse))
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/duplicateCode.json")));
+    }
+
+    @Test
     public void shouldDeleteExistingCourse() throws Exception {
         ResultActions createCourseResponse = createNewCourse(new NewCourse("PT", "003"));
         String uuid = getUuidFromResponse(createCourseResponse);
