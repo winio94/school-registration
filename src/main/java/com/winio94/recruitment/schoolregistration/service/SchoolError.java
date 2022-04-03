@@ -4,11 +4,17 @@ import io.vavr.collection.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.NotImplementedException;
 
-public enum StudentError {
+public enum SchoolError {
     PERSONAL_ID_ALREADY_USED() {
         @Override
         public Map<String, String> errorDetails() {
             return HashMap.of("personalId", "is already used by other student")
+                          .toJavaMap();
+        }
+    }, CODE_ALREADY_USED() {
+        @Override
+        public Map<String, String> errorDetails() {
+            return HashMap.of("code", "is already used by other course")
                           .toJavaMap();
         }
     };

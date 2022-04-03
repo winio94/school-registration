@@ -49,7 +49,7 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
                                 .stream()
                                 .filter(isStudentAssignedToTheCourse(studentUuid))
                                 .map(Entry::getKey)
-                                .map(coursesRepository::getOne)
+                                .map(coursesRepository::getOneByUuid)
                                 .flatMap(c -> c.map(Stream::of)
                                                .orElseGet(Stream::empty))
                                 .collect(Collectors.toSet());

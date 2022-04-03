@@ -64,7 +64,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Student'
+                type: object
   /courses:
     get:
       tags:
@@ -325,14 +325,7 @@ components:
           type: string
         lastName:
           type: string
-    Student:
-      type: object
-      properties:
-        uuid:
-          type: string
-        firstName:
-          type: string
-        lastName:
+        personalId:
           type: string
     NewCourse:
       type: object
@@ -354,4 +347,15 @@ components:
       type: object
       properties:
         studentUuid:
+          type: string
+    Student:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        personalId:
+          type: string
+        uuid:
           type: string

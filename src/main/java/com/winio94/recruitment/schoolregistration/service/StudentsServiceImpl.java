@@ -33,13 +33,13 @@ public class StudentsServiceImpl implements StudentsService {
     }
 
     @Override
-    public Either<StudentError, Student> create(NewStudent newStudent) {
+    public Either<SchoolError, Student> create(NewStudent newStudent) {
         log.info("Creating new student with first name = {} and last name = {}",
                  newStudent.getFirstName(),
                  newStudent.getLastName());
         Optional<Student> student = studentsRepository.findByPersonalId(newStudent.getPersonalId());
         if (student.isPresent()) {
-            return Either.left(StudentError.PERSONAL_ID_ALREADY_USED);
+            return Either.left(SchoolError.PERSONAL_ID_ALREADY_USED);
         }
         return Either.right(studentsRepository.create(newStudent));
     }

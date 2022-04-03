@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         log.info("Registering student with uuid = {} for a course with uuid = {}",
                  registration.getUuid(),
                  courseUuid);
-        coursesRepository.getOne(courseUuid)
+        coursesRepository.getOneByUuid(courseUuid)
                          .orElseThrow(Errors.notFoundError(courseUuid, Entity.COURSE));
         studentsRepository.getOne(registration.getUuid())
                           .orElseThrow(Errors.notFoundError(courseUuid, Entity.STUDENT));
