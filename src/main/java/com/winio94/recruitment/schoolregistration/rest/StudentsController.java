@@ -4,6 +4,7 @@ import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.NewStudent;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.Uuid;
+import com.winio94.recruitment.schoolregistration.service.SchoolError;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import com.winio94.recruitment.schoolregistration.service.StudentsService;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class StudentsController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid NewStudent studentDto) {
         return studentsService.create(studentDto)
-                              .fold(error -> new ResponseEntity<>(error.errorDetails(), HttpStatus.BAD_REQUEST),
+                              .fold(SchoolError::toResponse,
                                     newStudent -> new ResponseEntity<>(newStudent, HttpStatus.CREATED));
     }
 

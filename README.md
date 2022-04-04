@@ -80,12 +80,10 @@ All existing REST APIs can be executed through Postman REST API client
 
 TODO tasks
 
-* validation of uniqueness
-    * unique course (unique code)
-    * unique registration for given student and course
 * API for removing registration for a given student (currently there is no such API, and once
   student registers to some course, neither student nor course cannot be deleted)
 * Proper error handling for database integrity errors
     * removing student/course while there is an existing registration for them
     * attempting to register student to given course for second time
 * Setting up CI/CD (e.g. Github actions)
+* migrate to latest Java

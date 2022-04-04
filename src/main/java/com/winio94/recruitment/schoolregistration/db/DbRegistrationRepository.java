@@ -11,4 +11,9 @@ public interface DbRegistrationRepository extends JpaRepository<DbRegistration, 
 
     @Query("SELECT COUNT(1) FROM DbRegistration r WHERE r.studentUuid = :studentUuid")
     int getNumberOfCoursesForStudent(@Param("studentUuid") String studentUuid);
+
+    @Query("SELECT CASE WHEN COUNT(1) > 0 THEN TRUE ELSE FALSE END FROM DbRegistration r "
+        + "WHERE r.studentUuid = :studentUuid " + "AND r.courseUuid = :courseUuid")
+    boolean isStudentRegisteredToCourse(@Param("studentUuid") String studentUuid,
+                                        @Param("courseUuid") String courseUuid);
 }

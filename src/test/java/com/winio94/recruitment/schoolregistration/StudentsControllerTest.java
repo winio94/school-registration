@@ -123,7 +123,7 @@ public class StudentsControllerTest extends AbstractControllerTest {
         mvc.perform(post("/students").contentType(MediaType.APPLICATION_JSON)
                                      .content(requestBody))
            .andExpect(status().isBadRequest())
-           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
+           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), false));
     }
 
     @ParameterizedTest

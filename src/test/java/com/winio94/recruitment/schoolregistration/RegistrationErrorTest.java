@@ -2,6 +2,7 @@ package com.winio94.recruitment.schoolregistration;
 
 import static com.winio94.recruitment.schoolregistration.TestUtils.randomPersonalId;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.winio94.recruitment.schoolregistration.api.NewCourse;
@@ -29,8 +30,8 @@ public class RegistrationErrorTest extends AbstractControllerTest {
 
         mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
                                                                 .content(toJsonString(new Registration(student2Uuid))))
-           .andExpect(status().isBadRequest());
-
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/tooManyStudentsForCourse.json")));
     }
 
     @Test
@@ -48,8 +49,8 @@ public class RegistrationErrorTest extends AbstractControllerTest {
 
         mvc.perform(post("/courses/{uuid}/register", course2Uuid).contentType(MediaType.APPLICATION_JSON)
                                                                  .content(toJsonString(new Registration(studentUuid))))
-           .andExpect(status().isBadRequest());
-
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/tooManyCoursesForStudent.json")));
     }
 
 }

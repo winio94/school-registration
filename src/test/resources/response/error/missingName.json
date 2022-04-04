@@ -1,3 +1,5 @@
 {
-  "name": "must not be empty"
+  "errors": [
+    "name must not be empty"
+  ]
 }

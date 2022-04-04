@@ -29,7 +29,7 @@ public class CoursesServiceImpl implements CoursesService {
     public Course getOneByUuid(String uuid) {
         log.info("Fetching course by uuid = {}", uuid);
         return coursesRepository.getOneByUuid(uuid)
-                                .orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
+                                .orElseThrow(HttpErrors.notFoundError(uuid, Entity.COURSE));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CoursesServiceImpl implements CoursesService {
     public void delete(String uuid) {
         log.info("Deleting course with uuid = {}", uuid);
         coursesRepository.getOneByUuid(uuid)
-                         .orElseThrow(Errors.notFoundError(uuid, Entity.COURSE));
+                         .orElseThrow(HttpErrors.notFoundError(uuid, Entity.COURSE));
         coursesRepository.delete(uuid);
     }
 }

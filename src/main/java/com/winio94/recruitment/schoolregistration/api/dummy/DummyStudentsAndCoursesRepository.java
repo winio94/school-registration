@@ -94,6 +94,14 @@ public class DummyStudentsAndCoursesRepository implements StudentsAndCoursesRepo
                                                 .count());
     }
 
+    @Override
+    public boolean isStudentRegisteredToCourse(Student student, Course course) {
+        return studentsPerCourse.getOrDefault(course.getUuid(), Collections.emptySet())
+                                .stream()
+                                .anyMatch(s -> s.getUuid()
+                                                .equals(student.getUuid()));
+    }
+
     private Predicate<Entry<String, Set<Student>>> isStudentAssignedToTheCourse(String studentUuid) {
         return (entry) -> {
             Set<Student> studentsAssignedToGivenCourse = entry.getValue();
