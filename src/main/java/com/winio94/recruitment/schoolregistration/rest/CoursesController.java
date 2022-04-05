@@ -6,8 +6,8 @@ import com.winio94.recruitment.schoolregistration.api.Registration;
 import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.Uuid;
 import com.winio94.recruitment.schoolregistration.service.CoursesService;
-import com.winio94.recruitment.schoolregistration.service.RegistrationResult;
 import com.winio94.recruitment.schoolregistration.service.RegistrationService;
+import com.winio94.recruitment.schoolregistration.service.SchoolError;
 import com.winio94.recruitment.schoolregistration.service.StudentsAndCoursesService;
 import java.util.Set;
 import javax.validation.Valid;
@@ -54,17 +54,17 @@ public class CoursesController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid NewCourse newCourse) {
         return coursesService.create(newCourse)
-                             .fold(error -> new ResponseEntity<>(error.errorDetails(), HttpStatus.BAD_REQUEST),
+                             .fold(SchoolError::toResponse,
                                    course -> new ResponseEntity<>(course, HttpStatus.CREATED));
     }
 
     @PostMapping("/{uuid}/register")
-    public ResponseEntity<Object> register(@PathVariable @Uuid String uuid,
-                                           @Valid @RequestBody Registration registration) {
-        RegistrationResult registrationResult = registrationService.register(uuid, registration);
-        return registrationResult.isSuccessful() ? ResponseEntity.ok()
-                                                                 .build() : ResponseEntity.badRequest()
-                                                                                          .build();
+    public ResponseEntity<?> register(@PathVariable @Uuid String uuid,
+                                      @Valid @RequestBody Registration registration) {
+        return registrationService.register(uuid, registration)
+                                  .fold(SchoolError::toResponse,
+                                        success -> ResponseEntity.ok()
+                                                                 .build());
     }
 
     @GetMapping("/{uuid}/students")

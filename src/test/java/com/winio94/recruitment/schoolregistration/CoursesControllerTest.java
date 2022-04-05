@@ -112,6 +112,25 @@ public class CoursesControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void shouldNotAllowToRegisterStudentToSameCourseTwice() throws Exception {
+        NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
+        NewCourse newCourse = new NewCourse("PT", "003");
+        String courseUuid = getUuidFromResponse(createNewCourse(newCourse));
+        String studentUuid = getUuidFromResponse(createNewStudent(newStudent));
+        String registrationRequestBody = toJsonString(new Registration(studentUuid));
+
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(registrationRequestBody))
+           .andExpect(status().isOk());
+
+        mvc.perform(post("/courses/{uuid}/register", courseUuid).contentType(MediaType.APPLICATION_JSON)
+                                                                .content(registrationRequestBody))
+           .andExpect(status().isBadRequest())
+           .andExpect(content().json(TestUtils.readFileAsString("response/error/duplicateRegistration.json")));
+    }
+
+
+    @Test
     public void shouldFilterCourses() throws Exception {
         NewCourse courseWithoutAnyStudent = new NewCourse("Maths", "004");
         NewStudent newStudent = new NewStudent("Tom", "Cruise", randomPersonalId());
@@ -145,7 +164,7 @@ public class CoursesControllerTest extends AbstractControllerTest {
         mvc.perform(post("/courses").contentType(MediaType.APPLICATION_JSON)
                                     .content(requestBody))
            .andExpect(status().isBadRequest())
-           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), true));
+           .andExpect(content().json(TestUtils.readFileAsString(errorResponseBody), false));
     }
 
     @ParameterizedTest

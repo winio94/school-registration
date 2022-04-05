@@ -1,3 +1,5 @@
 {
-  "personalId": "is already used by other student"
+  "errors": [
+    "provided personal ID is already used by other student"
+  ]
 }

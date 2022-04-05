@@ -1,3 +1,5 @@
 {
-  "code": "is already used by other course"
+  "errors": [
+    "provided code is already used by other course"
+  ]
 }

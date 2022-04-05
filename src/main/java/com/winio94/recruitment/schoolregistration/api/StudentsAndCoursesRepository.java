@@ -17,4 +17,6 @@ public interface StudentsAndCoursesRepository {
     int getNumberOfStudentsRegistered(String courseUuid);
 
     int getNumberOfCoursesForStudent(String studentUuid);
+
+    boolean isStudentRegisteredToCourse(Student student, Course course);
 }

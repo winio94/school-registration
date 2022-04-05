@@ -1,4 +1,6 @@
 {
-  "name": "must not be empty",
-  "code": "must not be empty"
+  "errors": [
+    "name must not be empty",
+    "code must not be empty"
+  ]
 }

@@ -1,10 +1,13 @@
 package com.winio94.recruitment.schoolregistration.service;
 
+import com.winio94.recruitment.schoolregistration.api.Course;
 import com.winio94.recruitment.schoolregistration.api.CoursesRepository;
-import com.winio94.recruitment.schoolregistration.api.Entity;
 import com.winio94.recruitment.schoolregistration.api.Registration;
+import com.winio94.recruitment.schoolregistration.api.Student;
 import com.winio94.recruitment.schoolregistration.api.StudentsAndCoursesRepository;
 import com.winio94.recruitment.schoolregistration.api.StudentsRepository;
+import io.vavr.control.Either;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,22 +33,29 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationResult register(String courseUuid, Registration registration) {
+    public Either<SchoolError, Void> register(String courseUuid, Registration registration) {
         log.info("Registering student with uuid = {} for a course with uuid = {}",
                  registration.getUuid(),
                  courseUuid);
-        coursesRepository.getOneByUuid(courseUuid)
-                         .orElseThrow(Errors.notFoundError(courseUuid, Entity.COURSE));
-        studentsRepository.getOne(registration.getUuid())
-                          .orElseThrow(Errors.notFoundError(courseUuid, Entity.STUDENT));
+        Optional<Course> course = coursesRepository.getOneByUuid(courseUuid);
+        if (!course.isPresent()) {
+            return Either.left(SchoolError.COURSE_DOES_NOT_EXISTS);
+        }
+        Optional<Student> student = studentsRepository.getOne(registration.getUuid());
+        if (!student.isPresent()) {
+            return Either.left(SchoolError.STUDENT_DOES_NOT_EXISTS);
+        }
+        if (studentsAndCoursesRepository.isStudentRegisteredToCourse(student.get(), course.get())) {
+            return Either.left(SchoolError.STUDENT_ALREADY_REGISTERED_TO_COURSE);
+        }
         if (isNumberOfStudentsExceeded(courseUuid)) {
-            return numberOfStudentsExceededError();
+            return Either.left(numberOfStudentsExceededError());
         }
         if (isNumberOfCoursesExceeded(registration)) {
-            return numberOfCoursesExceededError();
+            return Either.left(numberOfCoursesExceededError());
         }
         studentsAndCoursesRepository.addStudentToTheCourse(courseUuid, registration.getUuid());
-        return RegistrationResult.SUCCESS;
+        return Either.right(null);
     }
 
     private boolean isNumberOfStudentsExceeded(String courseUuid) {
@@ -60,18 +70,18 @@ public class RegistrationServiceImpl implements RegistrationService {
         return numberOfCoursesAssignedToStudent >= maxNumberOfCoursesPerStudent;
     }
 
-    private RegistrationResult numberOfStudentsExceededError() {
+    private SchoolError numberOfStudentsExceededError() {
         log.error(
             "Unable to register student to this course, because the maximum number of students ({}) for given course would be exceeded",
             maxNumberOfStudentsPerCourse);
-        return RegistrationResult.NUMBER_OF_STUDENTS_EXCEEDED;
+        return SchoolError.NUMBER_OF_STUDENTS_EXCEEDED;
     }
 
-    private RegistrationResult numberOfCoursesExceededError() {
+    private SchoolError numberOfCoursesExceededError() {
         log.error(
             "Unable to register student to this course, because the maximum number of courses ({}) for given student would be exceeded",
             maxNumberOfCoursesPerStudent);
-        return RegistrationResult.NUMBER_OF_COURSES_EXCEEDED;
+        return SchoolError.NUMBER_OF_COURSES_EXCEEDED;
     }
 
 }

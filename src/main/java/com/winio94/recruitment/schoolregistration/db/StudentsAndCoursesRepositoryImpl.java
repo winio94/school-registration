@@ -66,4 +66,9 @@ public class StudentsAndCoursesRepositoryImpl implements StudentsAndCoursesRepos
     public int getNumberOfCoursesForStudent(String studentUuid) {
         return dbRegistrationRepository.getNumberOfCoursesForStudent(studentUuid);
     }
+
+    @Override
+    public boolean isStudentRegisteredToCourse(Student student, Course course) {
+        return dbRegistrationRepository.isStudentRegisteredToCourse(student.getUuid(), course.getUuid());
+    }
 }
